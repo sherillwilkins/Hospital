@@ -1,2 +1,20 @@
 server:
   port: 8080
+
+spring:
+  # 配置数据源
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql:///hospital?serverTimezone=Asia/Shanghai&useSSL=false&characterEncoding=UTF-8
+    username: root
+    password: root
+
+# 配置 mybatis-plus
+mybatis-plus:
+  configuration:
+    # 在映射实体或者属性时，将数据库中表名和字段名中的下划线去掉，按照驼峰命名法映射
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  type-aliases-package: com.w83ll43.hospital.model
+  mapper-locations: classpath:mapper/*.xml
