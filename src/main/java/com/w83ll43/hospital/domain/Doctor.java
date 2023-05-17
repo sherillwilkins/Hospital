@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 
+ * 医生表
  * @TableName doctor
  */
 @TableName(value ="doctor")

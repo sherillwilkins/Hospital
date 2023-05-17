@@ -9,11 +9,12 @@
             <result property="name" column="name" jdbcType="VARCHAR"/>
             <result property="specification" column="specification" jdbcType="VARCHAR"/>
             <result property="price" column="price" jdbcType="DECIMAL"/>
-            <result property="inventory" column="inventory" jdbcType="VARCHAR"/>
+            <result property="unit" column="unit" jdbcType="VARCHAR"/>
+            <result property="stack" column="stack" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,name,specification,
-        price,inventory
+        price,unit,stack
     </sql>
 </mapper>

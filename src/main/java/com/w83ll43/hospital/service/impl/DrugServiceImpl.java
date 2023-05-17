@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 
 /**
 * @author w83ll43
-* @description 针对表【drug】的数据库操作Service实现
-* @createDate 2023-05-14 14:25:26
+* @description 针对表【drug(药品表)】的数据库操作Service实现
+* @createDate 2023-05-17 22:33:28
 */
 @Service
 public class DrugServiceImpl extends ServiceImpl<DrugMapper, Drug>

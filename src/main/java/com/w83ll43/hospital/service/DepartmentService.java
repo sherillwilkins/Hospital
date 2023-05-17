@@ -5,8 +5,8 @@ import com.w83ll43.hospital.domain.Department;
 
 /**
 * @author w83ll43
-* @description 针对表【department】的数据库操作Service
-* @createDate 2023-05-14 14:25:26
+* @description 针对表【department(部门表)】的数据库操作Service
+* @createDate 2023-05-17 22:33:28
 */
 public interface DepartmentService extends IService<Department> {
 

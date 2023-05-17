@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
- * 
+ * 药品表
  * @TableName drug
  */
 @TableName(value ="drug")
@@ -37,9 +37,14 @@ public class Drug implements Serializable {
     private BigDecimal price;
 
     /**
+     * 价格单位
+     */
+    private String unit;
+
+    /**
      * 库存数量
      */
-    private String inventory;
+    private Integer stack;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

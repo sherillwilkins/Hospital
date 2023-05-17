@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.w83ll43.hospital.mapper.HospitalizationFileMapper">
+
+    <resultMap id="BaseResultMap" type="com.w83ll43.hospital.domain.HospitalizationFile">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="patientId" column="patient_id" jdbcType="BIGINT"/>
+            <result property="admissionTime" column="admission_time" jdbcType="TIMESTAMP"/>
+            <result property="dischargeTime" column="discharge_time" jdbcType="TIMESTAMP"/>
+            <result property="bedId" column="bed_id" jdbcType="BIGINT"/>
+            <result property="billId" column="bill_id" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,patient_id,admission_time,
+        discharge_time,bed_id,bill_id
+    </sql>
+</mapper>

@@ -8,7 +8,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 
+ * 部门表
  * @TableName department
  */
 @TableName(value ="department")
@@ -29,6 +29,11 @@ public class Department implements Serializable {
      * 科室介绍
      */
     private String description;
+
+    /**
+     * 所属部门
+     */
+    private Long sectionId;
 
     /**
      * 联系方式

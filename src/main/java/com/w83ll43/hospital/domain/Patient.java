@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 
+ * 病人表
  * @TableName patient
  */
 @TableName(value ="patient")
@@ -40,6 +40,11 @@ public class Patient implements Serializable {
      * 身份证号
      */
     private String idCard;
+
+    /**
+     * 家庭住址
+     */
+    private String address;
 
     /**
      * 联系方式
