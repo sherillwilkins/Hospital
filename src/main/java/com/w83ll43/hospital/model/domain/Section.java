@@ -1,4 +1,4 @@
-package com.w83ll43.hospital.domain;
+package com.w83ll43.hospital.model.domain;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -6,30 +6,29 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 /**
- * 病床表
- * @TableName bed
+ * 部门表
+ * @TableName section
  */
-@TableName(value ="bed")
+@TableName(value ="section")
 @Data
-public class Bed implements Serializable {
+public class Section implements Serializable {
     /**
-     * 病床编号
+     * 部门编号
      */
     @TableId
     private Long id;
 
     /**
-     * 病房编号
+     * 部门名称
      */
-    private Long wardId;
+    private String name;
 
     /**
-     * 病床床位费
+     * 部门描述
      */
-    private BigDecimal charge;
+    private String description;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

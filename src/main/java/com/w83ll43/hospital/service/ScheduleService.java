@@ -1,7 +1,7 @@
 package com.w83ll43.hospital.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.w83ll43.hospital.domain.Schedule;
+import com.w83ll43.hospital.model.domain.Schedule;
 
 /**
 * @author w83ll43

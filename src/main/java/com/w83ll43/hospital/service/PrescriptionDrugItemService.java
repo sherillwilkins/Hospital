@@ -1,7 +1,10 @@
 package com.w83ll43.hospital.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.w83ll43.hospital.domain.PrescriptionDrugItem;
+import com.w83ll43.hospital.model.domain.PrescriptionDrugItem;
+import com.w83ll43.hospital.model.param.PrescriptionDrugParam;
+
+import java.util.List;
 
 /**
 * @author w83ll43
@@ -10,4 +13,10 @@ import com.w83ll43.hospital.domain.PrescriptionDrugItem;
 */
 public interface PrescriptionDrugItemService extends IService<PrescriptionDrugItem> {
 
+    /**
+     * 添加药品项记录
+     * @param prescriptionId
+     * @param prescriptionDrugParamList
+     */
+    void createDrugItems(long prescriptionId, List<PrescriptionDrugParam> prescriptionDrugParamList);
 }

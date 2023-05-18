@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.w83ll43.hospital.mapper.PrescriptionDrugItemMapper">
 
-    <resultMap id="BaseResultMap" type="com.w83ll43.hospital.domain.PrescriptionDrugItem">
+    <resultMap id="BaseResultMap" type="com.w83ll43.hospital.model.domain.PrescriptionDrugItem">
             <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="prescriptionId" column="prescription_id" jdbcType="BIGINT"/>
             <result property="drugId" column="drug_id" jdbcType="BIGINT"/>

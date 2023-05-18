@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.w83ll43.hospital.mapper.DoctorMapper">
 
-    <resultMap id="BaseResultMap" type="com.w83ll43.hospital.domain.Doctor">
+    <resultMap id="BaseResultMap" type="com.w83ll43.hospital.model.domain.Doctor">
             <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="name" column="name" jdbcType="VARCHAR"/>
             <result property="gender" column="gender" jdbcType="INTEGER"/>

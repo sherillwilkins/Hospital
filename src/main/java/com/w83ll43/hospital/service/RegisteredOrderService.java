@@ -1,7 +1,8 @@
 package com.w83ll43.hospital.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.w83ll43.hospital.domain.RegisteredOrder;
+import com.w83ll43.hospital.model.domain.RegisteredOrder;
+import com.w83ll43.hospital.model.param.RegisteredOrderParam;
 
 /**
 * @author w83ll43
@@ -10,4 +11,11 @@ import com.w83ll43.hospital.domain.RegisteredOrder;
 */
 public interface RegisteredOrderService extends IService<RegisteredOrder> {
 
+
+    /**
+     * 创建挂单号
+     * @param registeredOrderParam
+     * @return
+     */
+    RegisteredOrder createRegistration(RegisteredOrderParam registeredOrderParam);
 }

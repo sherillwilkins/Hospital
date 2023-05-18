@@ -1,7 +1,7 @@
 package com.w83ll43.hospital.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.w83ll43.hospital.domain.Doctor;
+import com.w83ll43.hospital.model.domain.Doctor;
 
 /**
 * @author w83ll43

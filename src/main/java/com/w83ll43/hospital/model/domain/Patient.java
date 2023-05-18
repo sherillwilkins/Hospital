@@ -1,4 +1,4 @@
-package com.w83ll43.hospital.domain;
+package com.w83ll43.hospital.model.domain;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -9,47 +9,47 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 处方表
- * @TableName prescription
+ * 病人表
+ * @TableName patient
  */
-@TableName(value ="prescription")
+@TableName(value ="patient")
 @Data
-public class Prescription implements Serializable {
+public class Patient implements Serializable {
     /**
-     * 处方编号
+     * 病人编号
      */
     @TableId
     private Long id;
 
     /**
-     * 病人编号
+     * 姓名
      */
-    private Long patientId;
+    private String name;
 
     /**
-     * 医生编号
+     * 性别--1为男、2为女
      */
-    private Long doctorId;
+    private Integer gender;
 
     /**
-     * 症状描述
+     * 出生日期
      */
-    private String symptom;
+    private Date birthday;
 
     /**
-     * 开具日期
+     * 身份证号
      */
-    private Date date;
+    private String idCard;
 
     /**
-     * 是否住院
+     * 家庭住址
      */
-    private Integer hospitalized;
+    private String address;
 
     /**
-     * 缴费单编号
+     * 联系方式
      */
-    private Long billId;
+    private String telephone;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

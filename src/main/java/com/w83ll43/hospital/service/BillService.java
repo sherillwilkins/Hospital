@@ -1,7 +1,11 @@
 package com.w83ll43.hospital.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.w83ll43.hospital.domain.Bill;
+import com.w83ll43.hospital.model.domain.Bill;
+import com.w83ll43.hospital.model.param.PrescriptionDrugParam;
+
+import java.util.Date;
+import java.util.List;
 
 /**
 * @author w83ll43
@@ -10,4 +14,21 @@ import com.w83ll43.hospital.domain.Bill;
 */
 public interface BillService extends IService<Bill> {
 
+    /**
+     * 创建挂号单缴费单
+     * @param patientId
+     * @param billDate
+     * @return
+     */
+    Long createRegistrationBill(Long patientId, Date billDate);
+
+    /**
+     * 创建处方缴费单
+     * @param patientId
+     * @param doctorId
+     * @param prescriptionDrugParamList
+     * @param billDate
+     * @return
+     */
+    Long createPrescriptionBill(Long patientId, Long doctorId, List<PrescriptionDrugParam> prescriptionDrugParamList, Date billDate);
 }

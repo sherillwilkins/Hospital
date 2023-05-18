@@ -1,4 +1,4 @@
-package com.w83ll43.hospital.domain;
+package com.w83ll43.hospital.model.domain;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -6,50 +6,39 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
- * 医生表
- * @TableName doctor
+ * 部门表
+ * @TableName department
  */
-@TableName(value ="doctor")
+@TableName(value ="department")
 @Data
-public class Doctor implements Serializable {
+public class Department implements Serializable {
     /**
-     * 主键
+     * 科室编号
      */
     @TableId
     private Long id;
 
     /**
-     * 姓名
+     * 科室名称
      */
     private String name;
 
     /**
-     * 性别--1为男、2为女
+     * 科室介绍
      */
-    private Integer gender;
+    private String description;
 
     /**
-     * 出生日期
+     * 所属部门
      */
-    private Date birthday;
+    private Long sectionId;
 
     /**
      * 联系方式
      */
     private String telephone;
-
-    /**
-     * 职称
-     */
-    private String title;
-
-    /**
-     * 所在科室
-     */
-    private Long departmentId;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

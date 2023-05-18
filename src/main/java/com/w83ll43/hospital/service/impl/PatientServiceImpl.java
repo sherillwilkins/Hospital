@@ -1,8 +1,8 @@
 package com.w83ll43.hospital.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.w83ll43.hospital.domain.Patient;
 import com.w83ll43.hospital.mapper.PatientMapper;
+import com.w83ll43.hospital.model.domain.Patient;
 import com.w83ll43.hospital.service.PatientService;
 import org.springframework.stereotype.Service;
 

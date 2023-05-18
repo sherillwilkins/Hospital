@@ -1,4 +1,4 @@
-package com.w83ll43.hospital.domain;
+package com.w83ll43.hospital.model.domain;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -9,14 +9,14 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 住院档案
- * @TableName hospitalization_file
+ * 挂号单表
+ * @TableName registered_order
  */
-@TableName(value ="hospitalization_file")
+@TableName(value ="registered_order")
 @Data
-public class HospitalizationFile implements Serializable {
+public class RegisteredOrder implements Serializable {
     /**
-     * 住院档案编号
+     * 挂号单编号
      */
     @TableId
     private Long id;
@@ -27,22 +27,22 @@ public class HospitalizationFile implements Serializable {
     private Long patientId;
 
     /**
-     * 入院时间
+     * 挂号科室
      */
-    private Date admissionTime;
+    private Long departmentId;
 
     /**
-     * 出院时间
+     * 挂号医生
      */
-    private Date dischargeTime;
+    private Long doctorId;
 
     /**
-     * 病床编号
+     * 挂号时间
      */
-    private Long bedId;
+    private Date date;
 
     /**
-     * 预缴费单编号
+     * 缴费单编号
      */
     private Long billId;
 

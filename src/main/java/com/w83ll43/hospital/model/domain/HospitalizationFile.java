@@ -1,4 +1,4 @@
-package com.w83ll43.hospital.domain;
+package com.w83ll43.hospital.model.domain;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -6,41 +6,45 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * 缴费单表
- * @TableName bill
+ * 住院档案
+ * @TableName hospitalization_file
  */
-@TableName(value ="bill")
+@TableName(value ="hospitalization_file")
 @Data
-public class Bill implements Serializable {
+public class HospitalizationFile implements Serializable {
     /**
-     * 缴费单编号
+     * 住院档案编号
      */
     @TableId
     private Long id;
 
     /**
-     * 缴费病人
+     * 病人编号
      */
     private Long patientId;
 
     /**
-     * 缴费类型
+     * 入院时间
      */
-    private Integer type;
+    private Date admissionTime;
 
     /**
-     * 缴费金额
+     * 出院时间
      */
-    private BigDecimal amount;
+    private Date dischargeTime;
 
     /**
-     * 缴费日期
+     * 病床编号
      */
-    private Date date;
+    private Long bedId;
+
+    /**
+     * 预缴费单编号
+     */
+    private Long billId;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

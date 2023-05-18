@@ -1,4 +1,4 @@
-package com.w83ll43.hospital.domain;
+package com.w83ll43.hospital.model.domain;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -37,31 +37,31 @@ public class PrescriptionDrugItem implements Serializable {
 
     /**
      * 处方药品服用次数（服用频率）
-如 每日两次
+     * 如 每日两次
      */
     private String frequency;
 
     /**
-     * 处方药品服用数量 
-如 2
+     * 处方药品服用数量
+     * 如 2
      */
     private Integer usageNum;
 
     /**
-     * 处方药品服用单位 
-如粒、毫升、瓶等
+     * 处方药品服用单位
+     * 如粒、毫升、瓶等
      */
     private String usageUnit;
 
     /**
-     * 处方药品服用方式 
-如口服、饭后服、外服等
+     * 处方药品服用方式
+     * 如口服、饭后服、外服等
      */
     private String usageMethod;
 
     /**
      * 处方药品使用时长（持续时间）
-如 一星期
+     * 如 一星期
      */
     private String duration;
 

@@ -1,7 +1,8 @@
 package com.w83ll43.hospital.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.w83ll43.hospital.domain.Prescription;
+import com.w83ll43.hospital.model.domain.Prescription;
+import com.w83ll43.hospital.model.param.PrescriptionParam;
 
 /**
 * @author w83ll43
@@ -10,4 +11,10 @@ import com.w83ll43.hospital.domain.Prescription;
 */
 public interface PrescriptionService extends IService<Prescription> {
 
+    /**
+     * 创建处方
+     * @param prescriptionParam
+     * @return
+     */
+    Prescription createPrescription(PrescriptionParam prescriptionParam);
 }

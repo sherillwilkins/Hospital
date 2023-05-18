@@ -1,7 +1,7 @@
 package com.w83ll43.hospital.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.w83ll43.hospital.domain.User;
+import com.w83ll43.hospital.model.domain.User;
 
 /**
 * @author w83ll43
@@ -9,5 +9,12 @@ import com.w83ll43.hospital.domain.User;
 * @createDate 2023-05-17 22:33:28
 */
 public interface UserService extends IService<User> {
+
+    /**
+     * 根据用户名获取用户
+     * @param username
+     * @return
+     */
+    User getUserByUsername(String username);
 
 }
