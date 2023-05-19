@@ -1,11 +1,10 @@
 package com.w83ll43.hospital.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.w83ll43.hospital.common.Result;
-import com.w83ll43.hospital.model.domain.Doctor;
-import com.w83ll43.hospital.model.domain.Drug;
-import com.w83ll43.hospital.model.domain.User;
+import com.w83ll43.hospital.model.domain.*;
 import com.w83ll43.hospital.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -19,6 +18,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
+    /**
+     * 批量删除->删除成功的前提为没有其他表的外键与之关联
+     * 这里假设不会出现这种情况
+     */
 
     @Resource
     private UserService userService;
@@ -75,9 +78,12 @@ public class AdminController {
      * @param doctor
      * @return
      */
-    @PostMapping
+    @PostMapping("/doctor")
     public Result<Doctor> addDoctor(@RequestBody Doctor doctor) {
-        return null;
+        long doctorId = IdWorker.getId(doctor);
+        doctor.setId(doctorId);
+        doctorService.save(doctor);
+        return Result.success(doctor);
     }
 
     /**
@@ -85,18 +91,20 @@ public class AdminController {
      * @param id
      * @return
      */
-    @GetMapping("/{id}")
+    @GetMapping("/doctor/{id}")
     public Result<Doctor> getDoctorById(@PathVariable("id") Long id) {
-        return null;
+        Doctor doctor = doctorService.getById(id);
+        return Result.success(doctor);
     }
 
     /**
      * 获取所有医生
      * @return
      */
-    @GetMapping("/all")
+    @GetMapping("/doctor/list")
     public Result<List<Doctor>> getDoctors() {
-        return null;
+        List<Doctor> doctors = doctorService.list();
+        return Result.success(doctors);
     }
 
     /**
@@ -131,132 +139,276 @@ public class AdminController {
      * @param doctor
      * @return
      */
-    @PutMapping
+    @PutMapping("/doctor")
     public Result<Doctor> updateDoctor(@RequestBody Doctor doctor) {
         return null;
     }
 
     /**
-     * 根据 ID 删除医生信息
+     * 根据 IDs 删除医生信息
+     * @param ids
+     * @return
+     */
+    @DeleteMapping("/doctor")
+    public Result<String> deleteDoctorByIds(@RequestParam List<Long> ids) {
+        boolean result = doctorService.removeByIds(ids);
+        return result ? Result.success("批量删除医生成功！") : Result.error("批量删除医生失败！");
+    }
+
+    /**
+     * 添加部门
+     * @param section
+     * @return
+     */
+    @PostMapping("/section")
+    public Result<Section> addSection(@RequestBody Section section) {
+        // 1、生成 ID
+        long id = IdWorker.getId(section);
+        section.setId(id);
+
+        // 2、保存至数据库
+        sectionService.save(section);
+
+        return Result.success(section);
+    }
+
+    /**
+     * 根据 ID 获取部门
      * @param id
      * @return
      */
-    @DeleteMapping("/{id}")
-    public Result<String> deleteDoctorById(@PathVariable("id") Long id) {
-        return null;
-    }
+    @GetMapping("/section/{id}")
+    public Result<Section> getSectionById(@PathVariable("id") Long id) {
+        Section section = sectionService.getById(id);
 
-    /**
-     * 新增医生
-     * @param doctor
-     * @param request
-     * @return
-     */
-    @PostMapping("/add/doctor")
-    public Result<String> addDoctor(@RequestBody Doctor doctor, HttpServletRequest request) {
-//        // 1、校验是否登录
-//        if (request.getSession().getAttribute("username") == null) {
-//            return Result.error("请先登录！");
-//        }
-//
-//        // 2、判断用户是否拥有权限
-//        if (request.getSession().getAttribute("role") != "admin") {
-//            return Result.error("用户无权限！");
-//        }
-
-        // 3、校验数据 （这部分前端也可以进行校验）
-        if (StringUtils.isBlank(doctor.getName())) {
-            return Result.error("医生姓名不能为空！");
+        if (section == null) {
+            return Result.error("部门不存在！");
         }
 
-        doctorService.save(doctor);
-
-        return Result.success("新增医生成功！");
+        return Result.success(section);
     }
 
     /**
-     * 新增药品
+     * 根据 ID 修改部门信息
+     * @param section
+     * @return
+     */
+    @PutMapping("/section")
+    public Result<Section> updateSectionById(@RequestBody Section section) {
+        boolean result = sectionService.updateById(section);
+        return result ? Result.success(section) : Result.error("更新部门失败！");
+    }
+
+    /**
+     * 获取所有部门信息
+     * @return
+     */
+    @GetMapping("/section/list")
+    public Result<List<Section>> getSections() {
+        List<Section> sections = sectionService.list();
+        return Result.success(sections);
+    }
+
+    /**
+     * 分页获取部门信息
+     * @param page
+     * @param pageSize
+     * @param name
+     * @return
+     */
+    @GetMapping("/section/page")
+    public Result<Page<Section>> sectionPage(int page, int pageSize, String name) {
+        // 1、构造分页构造器
+        Page<Section> pageInfo = new Page<>(page, pageSize);
+
+        // 2、构造条件构造器
+        LambdaQueryWrapper<Section> lambdaQueryWrapper = new LambdaQueryWrapper<Section>();
+        lambdaQueryWrapper.like(name != null, Section::getName, name);
+        lambdaQueryWrapper.orderByAsc(Section::getId);
+
+        // 3、分页查询
+        sectionService.page(pageInfo, lambdaQueryWrapper);
+
+        return Result.success(pageInfo);
+    }
+
+    /**
+     * 根据 IDS 删除部门信息
+     * 使用集合接收参数需要使用 @RequestParam 注解
+     * @param ids
+     * @return
+     */
+    @DeleteMapping("/section")
+    public Result<String> deleteSectionByIds(@RequestParam List<Long> ids) {
+        boolean result = sectionService.removeByIds(ids);
+        return result ? Result.success("批量删除部门成功！") : Result.error("批量删除部门失败！");
+    }
+
+    /**
+     * 添加科室
+     * @param department
+     * @return
+     */
+    @PostMapping("/department")
+    public Result<Department> addDepartment(@RequestBody Department department) {
+        long id = IdWorker.getId(department);
+        department.setId(id);
+        departmentService.save(department);
+        return Result.success(department);
+    }
+
+    /**
+     * 根据 ID 查询科室
+     * @param id
+     * @return
+     */
+    @GetMapping("/department/{id}")
+    public Result<Department> getDepartmentById(@PathVariable("id") Long id) {
+        Department department = departmentService.getById(id);
+
+        if (department == null) {
+            return Result.error("部门不存在！");
+        }
+
+        return Result.success(department);
+    }
+
+    /**
+     * 根据 ID 修改科室信息
+     * @param department
+     * @return
+     */
+    @PutMapping("/department")
+    public Result<Department> updateDepartmentById(@RequestBody Department department) {
+        boolean result = departmentService.updateById(department);
+        return result ? Result.success(department) : Result.error("修改科室信息失败");
+    }
+
+    /**
+     * 获取所有科室
+     * @return
+     */
+    @GetMapping("/department/list")
+    public Result<List<Department>> getDepartments() {
+        List<Department> departments = departmentService.list();
+        return Result.success(departments);
+    }
+
+    /**
+     * 分页查询科室
+     * @param page
+     * @param pageSize
+     * @param name
+     * @return
+     */
+    @GetMapping("/department/page")
+    public Result<Page<Department>> departmentPage(int page, int pageSize, String name) {
+        // 1、构造分页构造器
+        Page<Department> pageInfo = new Page<>(page, pageSize);
+
+        // 2、构造条件构造器
+        LambdaQueryWrapper<Department> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.like(name != null, Department::getName, name);
+        lambdaQueryWrapper.orderByAsc(Department::getId);
+
+        // 3、分页查询
+        departmentService.page(pageInfo, lambdaQueryWrapper);
+
+        return Result.success(pageInfo);
+    }
+
+    /**
+     * 根据 IDS 批量删除科室
+     * @param ids
+     * @return
+     */
+    @DeleteMapping("/department")
+    public Result<String> deleteDepartmentById(@RequestParam List<Long> ids) {
+        boolean result = departmentService.removeByIds(ids);
+        return result ? Result.success("批量删除科室成功！") : Result.error("批量删除科室失败！");
+    }
+
+    /**
+     * 添加药品
      * @param drug
-     * @param request
      * @return
      */
-    @PostMapping("/add/drug")
-    public Result<String> addDrug(@RequestBody Drug drug, HttpServletRequest request) {
-//        // 1、校验是否登录
-//        if (request.getSession().getAttribute("username") == null) {
-//            return Result.error("请先登录！");
-//        }
-
-        // 2、校验用户角色、只有管理员和药房管理人员才拥有权限
-//        String role = (String) request.getSession().getAttribute("role");
-//        if (!("admin".equals(role) || "drugManager".equals(role))) {
-//            return Result.error("用户无权限！");
-//        }
-
-        // 3、校验数据合法性
-        if (StringUtils.isAnyBlank(drug.getName(), drug.getSpecification())) {
-            if (drug.getPrice() == null || drug.getStack() == null) {
-                return Result.error("药品信息不能为空！");
-            }
-        }
-
+    @PostMapping("/drug")
+    public Result<Drug> addDrug(@RequestBody Drug drug) {
+        long id = IdWorker.getId(drug);
+        drug.setId(id);
         drugService.save(drug);
-
-        return Result.success("新增药品成功！");
+        return Result.success(drug);
     }
 
     /**
-     * 根据 ID 查询药品信息
+     * 根据 ID 查询药品
      * @param id
      * @return
      */
-    @GetMapping("/get/drug/{id}")
-    public Result<Drug> getDrug(@PathVariable("id") Long id) {
-        // 1、校验 （是否登录省略、后面使用过滤器实现）
-        if (id == null) {
-            return Result.error("id 不能为空！");
-        }
-
-        // 2、查询数据库
+    @GetMapping("/drug/{id}")
+    public Result<Drug> getDrugById(@PathVariable("id") Long id) {
         Drug drug = drugService.getById(id);
 
-        // 3、校验返回结果
         if (drug == null) {
-            return Result.error("无法查询 id 为 " + id + " 的药品！");
+            return Result.error("部门不存在！");
         }
 
         return Result.success(drug);
     }
 
     /**
-     * 修改药品信息
+     * 根据 ID 修改药品信息
      * @param drug
-     * @param request
      * @return
      */
-    @PutMapping("/update/drug")
-    public Result<String> updateDrug(@RequestBody Drug drug, HttpServletRequest request) {
-        // 1、校验
-        if (drug.getId() == null) {
-            return Result.error("需要修改的药品 ID 不能为空！");
-        }
-
-        // 2、更新
+    @PutMapping("/drug")
+    public Result<Drug> updateDrugById(@RequestBody Drug drug) {
         boolean result = drugService.updateById(drug);
-
-        return result ? Result.success("修改成功！") : Result.error("未知错误！");
+        return result ? Result.success(drug) : Result.error("修改药品信息失败");
     }
 
     /**
-     * 根据 ID 删除药品
-     * @param id
+     * 获取所有药品
      * @return
      */
-    @DeleteMapping("/delete/drug/{id}")
-    public Result<String> deleteDrug(@PathVariable("id") Long id) {
+    @GetMapping("/drug/list")
+    public Result<List<Drug>> getDrugs() {
+        List<Drug> drugs = drugService.list();
+        return Result.success(drugs);
+    }
 
-        boolean result = drugService.removeById(id);
+    /**
+     * 分页查询药品
+     * @param page
+     * @param pageSize
+     * @param name
+     * @return
+     */
+    @GetMapping("/drug/page")
+    public Result<Page<Drug>> drugPage(int page, int pageSize, String name) {
+        // 1、构造分页构造器
+        Page<Drug> pageInfo = new Page<>(page, pageSize);
 
-        return result ? Result.success("删除成功！") : Result.error("删除失败！");
+        // 2、构造条件构造器
+        LambdaQueryWrapper<Drug> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.like(name != null, Drug::getName, name);
+        lambdaQueryWrapper.orderByAsc(Drug::getId);
+
+        // 3、分页查询
+        drugService.page(pageInfo, lambdaQueryWrapper);
+
+        return Result.success(pageInfo);
+    }
+
+    /**
+     * 根据 IDS 批量删除药品
+     * @param ids
+     * @return
+     */
+    @DeleteMapping("/drug")
+    public Result<String> deleteDrugById(@RequestParam List<Long> ids) {
+        boolean result = drugService.removeByIds(ids);
+        return result ? Result.success("批量删除药品成功！") : Result.error("批量删除药品失败！");
     }
 }
