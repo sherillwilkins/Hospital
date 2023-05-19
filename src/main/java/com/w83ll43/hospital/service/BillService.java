@@ -2,6 +2,7 @@ package com.w83ll43.hospital.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.w83ll43.hospital.model.domain.Bill;
+import com.w83ll43.hospital.model.domain.Drug;
 import com.w83ll43.hospital.model.param.PrescriptionDrugParam;
 
 import java.util.Date;
@@ -31,4 +32,18 @@ public interface BillService extends IService<Bill> {
      * @return
      */
     Long createPrescriptionBill(Long patientId, Long doctorId, List<PrescriptionDrugParam> prescriptionDrugParamList, Date billDate);
+
+    /**
+     * 缴费
+     * @param id
+     * @return
+     */
+    Boolean payBill(Long id);
+
+    /**
+     * 根据 id 获取药品信息
+     * @param drugId
+     * @return
+     */
+    Drug getDrugById(Long drugId);
 }

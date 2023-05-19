@@ -3,6 +3,9 @@ package com.w83ll43.hospital.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.w83ll43.hospital.model.domain.RegisteredOrder;
 import com.w83ll43.hospital.model.param.RegisteredOrderParam;
+import com.w83ll43.hospital.model.vo.FeeDetail;
+
+import java.util.List;
 
 /**
 * @author w83ll43
@@ -18,4 +21,11 @@ public interface RegisteredOrderService extends IService<RegisteredOrder> {
      * @return
      */
     RegisteredOrder createRegistration(RegisteredOrderParam registeredOrderParam);
+
+    /**
+     * 获取挂号缴费单费用明细
+     * @param billId
+     * @return
+     */
+    List<FeeDetail> getRegistrationFeeDetails(Long billId);
 }

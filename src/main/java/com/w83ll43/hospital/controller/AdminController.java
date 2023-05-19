@@ -1,5 +1,7 @@
 package com.w83ll43.hospital.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.w83ll43.hospital.common.Result;
 import com.w83ll43.hospital.model.domain.Doctor;
 import com.w83ll43.hospital.model.domain.Drug;
@@ -63,8 +65,7 @@ public class AdminController {
         }
 
         // 5、登录成功 保存 session
-        request.getSession().setAttribute("username", "admin");
-        request.getSession().setAttribute("role", "admin");
+        request.getSession().setAttribute("user", userByUsername.getId());
 
         return Result.success(userByUsername);
     }
@@ -99,6 +100,33 @@ public class AdminController {
     }
 
     /**
+     * 分页查询
+     * 可以通过名称查询
+     * @param page
+     * @param pageSize
+     * @param name
+     * @return
+     */
+    @GetMapping("/doctor/page")
+    public Result<Page<Doctor>> doctorPage(int page, int pageSize, String name) {
+        // 1、构造分页构造器
+        Page<Doctor> pageInfo = new Page<>(page, pageSize);
+
+        // 2、构造条件构造器
+        LambdaQueryWrapper<Doctor> queryWrapper = new LambdaQueryWrapper<>();
+        // 添加排序条件 根据 id 进行排序
+        queryWrapper.orderByAsc(Doctor::getId);
+
+        // 查询条件
+        queryWrapper.like(name != null, Doctor::getName, name);
+
+        // 3、进行分页查询
+        doctorService.page(pageInfo, queryWrapper);
+
+        return Result.success(pageInfo);
+    }
+
+    /**
      * 更新医生信息
      * @param doctor
      * @return
@@ -126,15 +154,15 @@ public class AdminController {
      */
     @PostMapping("/add/doctor")
     public Result<String> addDoctor(@RequestBody Doctor doctor, HttpServletRequest request) {
-        // 1、校验是否登录
-        if (request.getSession().getAttribute("username") == null) {
-            return Result.error("请先登录！");
-        }
-
-        // 2、判断用户是否拥有权限
-        if (request.getSession().getAttribute("role") != "admin") {
-            return Result.error("用户无权限！");
-        }
+//        // 1、校验是否登录
+//        if (request.getSession().getAttribute("username") == null) {
+//            return Result.error("请先登录！");
+//        }
+//
+//        // 2、判断用户是否拥有权限
+//        if (request.getSession().getAttribute("role") != "admin") {
+//            return Result.error("用户无权限！");
+//        }
 
         // 3、校验数据 （这部分前端也可以进行校验）
         if (StringUtils.isBlank(doctor.getName())) {
@@ -154,16 +182,16 @@ public class AdminController {
      */
     @PostMapping("/add/drug")
     public Result<String> addDrug(@RequestBody Drug drug, HttpServletRequest request) {
-        // 1、校验是否登录
-        if (request.getSession().getAttribute("username") == null) {
-            return Result.error("请先登录！");
-        }
+//        // 1、校验是否登录
+//        if (request.getSession().getAttribute("username") == null) {
+//            return Result.error("请先登录！");
+//        }
 
         // 2、校验用户角色、只有管理员和药房管理人员才拥有权限
-        String role = (String) request.getSession().getAttribute("role");
-        if (!("admin".equals(role) || "drugManager".equals(role))) {
-            return Result.error("用户无权限！");
-        }
+//        String role = (String) request.getSession().getAttribute("role");
+//        if (!("admin".equals(role) || "drugManager".equals(role))) {
+//            return Result.error("用户无权限！");
+//        }
 
         // 3、校验数据合法性
         if (StringUtils.isAnyBlank(drug.getName(), drug.getSpecification())) {

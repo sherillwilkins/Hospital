@@ -9,11 +9,12 @@
             <result property="patientId" column="patient_id" jdbcType="BIGINT"/>
             <result property="type" column="type" jdbcType="INTEGER"/>
             <result property="amount" column="amount" jdbcType="DECIMAL"/>
+            <result property="status" column="status" jdbcType="INTEGER"/>
             <result property="date" column="date" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,patient_id,type,
-        amount,date
+        amount,status,date
     </sql>
 </mapper>

@@ -38,6 +38,11 @@ public class Bill implements Serializable {
     private BigDecimal amount;
 
     /**
+     * 缴费状态
+     */
+    private Integer status;
+
+    /**
      * 缴费日期
      */
     private Date date;

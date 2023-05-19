@@ -3,6 +3,9 @@ package com.w83ll43.hospital.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.w83ll43.hospital.model.domain.Prescription;
 import com.w83ll43.hospital.model.param.PrescriptionParam;
+import com.w83ll43.hospital.model.vo.FeeDetail;
+
+import java.util.List;
 
 /**
 * @author w83ll43
@@ -17,4 +20,11 @@ public interface PrescriptionService extends IService<Prescription> {
      * @return
      */
     Prescription createPrescription(PrescriptionParam prescriptionParam);
+
+    /**
+     * 获取处方单费用明细
+     * @param billId
+     * @return
+     */
+    List<FeeDetail> getPrescriptionFeeDetails(Long billId);
 }

@@ -34,7 +34,7 @@ public class LoginCheckFilter implements Filter {
 
         // 不需要处理的请求路径
         String[] urls = new String[]{
-                "/admin/login"
+                "/admin/login",
         };
 
         // 2、判断本次请求是否需要处理
@@ -61,6 +61,7 @@ public class LoginCheckFilter implements Filter {
         }
 
         // 5、如果未登录则返回未登录结果 通过输出流方式向客户端响应数据
+        response.setCharacterEncoding("UTF-8"); // 解决中文乱码
         response.getWriter().write(JSON.toJSONString(Result.error("未登录")));
         // log.info("拦截到请求：{}", request.getRequestURI());
     }

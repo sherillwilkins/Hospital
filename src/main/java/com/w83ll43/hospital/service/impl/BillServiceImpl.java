@@ -2,6 +2,7 @@ package com.w83ll43.hospital.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.w83ll43.hospital.common.CustomException;
 import com.w83ll43.hospital.mapper.BillMapper;
 import com.w83ll43.hospital.model.domain.Bill;
 import com.w83ll43.hospital.model.domain.Drug;
@@ -42,6 +43,7 @@ public class BillServiceImpl extends ServiceImpl<BillMapper, Bill>
         bill.setPatientId(patientId);
         // TODO 缴费单类型常量值
         bill.setType(1);
+        bill.setStatus(0);
 
         // TODO 挂号单费用常量值
         bill.setAmount(BigDecimal.valueOf(100));
@@ -73,6 +75,7 @@ public class BillServiceImpl extends ServiceImpl<BillMapper, Bill>
         bill.setPatientId(patientId);
         // TODO 缴费单类型常量值
         bill.setType(2);
+        bill.setStatus(0);
         bill.setDate(billDate);
 
         // 3、获取医生诊疗费用
@@ -98,6 +101,43 @@ public class BillServiceImpl extends ServiceImpl<BillMapper, Bill>
         this.save(bill);
 
         return billId;
+    }
+
+    /**
+     * 缴费
+     * @param id
+     * @return
+     */
+    @Override
+    public Boolean payBill(Long id) {
+        // 1、根据 id 获取 bill 实体
+        Bill bill = this.getById(id);
+
+        // 2、判断是否获取成功
+        if (bill == null) {
+            throw new CustomException("缴费单号不存在！");
+        }
+
+        // 3、判断缴费单是否已缴费
+        if (bill.getStatus() == 1) {
+            throw new CustomException("已缴费，请勿重复缴费！");
+        }
+
+        // 4、修改缴费单状态
+        bill.setStatus(1);
+
+        // 5、更新数据库
+        return this.updateById(bill);
+    }
+
+    /**
+     * 根据 id 获取药品信息
+     * @param drugId
+     * @return
+     */
+    @Override
+    public Drug getDrugById(Long drugId) {
+        return drugService.getById(drugId);
     }
 }
 

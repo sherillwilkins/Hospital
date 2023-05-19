@@ -1,14 +1,15 @@
 package com.w83ll43.hospital.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.w83ll43.hospital.common.BaseContext;
 import com.w83ll43.hospital.common.CustomException;
 import com.w83ll43.hospital.mapper.PrescriptionMapper;
-import com.w83ll43.hospital.model.domain.Prescription;
-import com.w83ll43.hospital.model.domain.User;
+import com.w83ll43.hospital.model.domain.*;
 import com.w83ll43.hospital.model.param.PrescriptionDrugParam;
 import com.w83ll43.hospital.model.param.PrescriptionParam;
+import com.w83ll43.hospital.model.vo.FeeDetail;
 import com.w83ll43.hospital.service.BillService;
 import com.w83ll43.hospital.service.PrescriptionDrugItemService;
 import com.w83ll43.hospital.service.PrescriptionService;
@@ -17,6 +18,8 @@ import com.w83ll43.hospital.utils.DateUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -45,6 +48,8 @@ public class PrescriptionServiceImpl extends ServiceImpl<PrescriptionMapper, Pre
      */
     @Override
     public Prescription createPrescription(PrescriptionParam prescriptionParam) {
+        long startTime = System.currentTimeMillis();
+
         // 1、获取登录用户的 ID
         Long id = BaseContext.getCurrentId();
 
@@ -52,7 +57,7 @@ public class PrescriptionServiceImpl extends ServiceImpl<PrescriptionMapper, Pre
         User user = userService.getById(id);
 
         // 3、判断用户角色
-        if (user.getRole() != "D") {
+        if (!"D".equals(user.getRole())) {
             throw new CustomException("非医生用户不能创建处方！");
         }
 
@@ -63,7 +68,8 @@ public class PrescriptionServiceImpl extends ServiceImpl<PrescriptionMapper, Pre
         Long patientId = prescriptionParam.getPatientId();
         prescription.setPatientId(patientId);
         prescription.setDoctorId(id);
-        prescription.setSymptom(prescription.getSymptom());
+        prescription.setSymptom(prescriptionParam.getSymptom());
+        prescription.setHospitalized(prescriptionParam.getHospitalized());
 
         Date currentDate = DateUtils.getCurrentDate();
         prescription.setDate(currentDate);
@@ -86,8 +92,65 @@ public class PrescriptionServiceImpl extends ServiceImpl<PrescriptionMapper, Pre
         // 10、更新数据库中的处方缴费单编号
         this.updateById(prescription);
 
+        System.out.println("执行时间为：" + (System.currentTimeMillis() - startTime));
         return prescription;
     }
+
+    /**
+     * 获取处方单费用明细
+     * @param billId
+     * @return
+     */
+    @Override
+    public List<FeeDetail> getPrescriptionFeeDetails(Long billId) {
+        // 1、根据缴费单编号查询处方单
+        LambdaQueryWrapper<Prescription> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Prescription::getBillId, billId);
+
+        Prescription prescription = this.getOne(queryWrapper);
+        // 获取处方单的医生编号 用于计算诊疗费用
+        Long patientId = prescription.getPatientId();
+        Long doctorId = prescription.getDoctorId();
+
+        // 2、根据处方单编号查询处方药品项编号
+        LambdaQueryWrapper<PrescriptionDrugItem> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(PrescriptionDrugItem::getPrescriptionId, prescription.getId());
+
+        List<PrescriptionDrugItem> drugItems = prescriptionDrugItemService.list(lambdaQueryWrapper);
+
+        // 3、构建费用明细 VO
+        List<FeeDetail> feeDetails = new ArrayList<>();
+        Bill bill = billService.getById(billId);
+        for (PrescriptionDrugItem drugItem : drugItems) {
+            // 获取药品项编号
+            Long drugId = drugItem.getDrugId();
+
+            // 获取药品项价格
+            // 使用 billService 获取 Drug 避免循环依赖注入
+            Drug drug = billService.getDrugById(drugId);
+            FeeDetail feeDetail = new FeeDetail();
+            feeDetail.setName(drug.getName());
+            feeDetail.setType("药品费用");
+            feeDetail.setPrice(drug.getPrice());
+            Date date = bill.getDate();
+            feeDetail.setDate(date);
+
+            // 添加到费用明细列表中
+            feeDetails.add(feeDetail);
+        }
+
+        // 4、医生诊疗费
+        FeeDetail feeDetail = new FeeDetail();
+        // TODO 根据医生编号查询医生诊疗费用
+        feeDetail.setName("医生诊疗费");
+        feeDetail.setPrice(new BigDecimal(doctorId));
+        feeDetail.setType("诊疗费");
+        feeDetail.setDate(bill.getDate());
+
+        feeDetails.add(feeDetail);
+        return feeDetails;
+    }
+
 }
 
 

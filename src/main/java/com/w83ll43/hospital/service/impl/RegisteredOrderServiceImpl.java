@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.w83ll43.hospital.common.BaseContext;
 import com.w83ll43.hospital.common.CustomException;
 import com.w83ll43.hospital.mapper.RegisteredOrderMapper;
+import com.w83ll43.hospital.model.domain.Bill;
 import com.w83ll43.hospital.model.domain.RegisteredOrder;
 import com.w83ll43.hospital.model.domain.User;
 import com.w83ll43.hospital.model.param.RegisteredOrderParam;
+import com.w83ll43.hospital.model.vo.FeeDetail;
 import com.w83ll43.hospital.service.BillService;
 import com.w83ll43.hospital.service.RegisteredOrderService;
 import com.w83ll43.hospital.service.UserService;
@@ -14,7 +16,9 @@ import com.w83ll43.hospital.utils.DateUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author w83ll43
@@ -66,7 +70,32 @@ public class RegisteredOrderServiceImpl extends ServiceImpl<RegisteredOrderMappe
         Long billId = billService.createRegistrationBill(id, currentDate);
         registeredOrder.setBillId(billId);
 
+        // 7、保存至数据库
+        this.save(registeredOrder);
+
         return registeredOrder;
+    }
+
+    /**
+     * 获取挂号缴费单费用明细
+     * @param billId
+     * @return
+     */
+    @Override
+    public List<FeeDetail> getRegistrationFeeDetails(Long billId) {
+        // 挂号缴费单的金额即挂号费用
+        Bill bill = billService.getById(billId);
+
+        List<FeeDetail> feeDetails = new ArrayList<>();
+
+        FeeDetail feeDetail = new FeeDetail();
+        feeDetail.setName("挂号");
+        feeDetail.setType("挂号费用");
+        feeDetail.setPrice(bill.getAmount());
+        feeDetail.setDate(bill.getDate());
+
+        feeDetails.add(feeDetail);
+        return feeDetails;
     }
 }
 
