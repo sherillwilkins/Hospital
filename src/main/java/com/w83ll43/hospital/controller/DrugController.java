@@ -44,12 +44,12 @@ public class DrugController {
     }
 
     /**
-     * 分页获取药品信息
+     * 获取所有药品信息
      * @return
      */
-    @GetMapping("/all")
-    public Result<List<Drug>> getDrugs(int size, int page) {
-        return null;
+    @GetMapping("/list")
+    public Result<List<Drug>> getDrugs() {
+        return Result.success(drugService.list());
     }
 
     /**

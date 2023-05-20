@@ -74,6 +74,16 @@ public class AdminController {
     }
 
     /**
+     * 获取所有用户
+     * @return
+     */
+    @GetMapping("/user/list")
+    public Result<List<User>> getUsers() {
+        List<User> users = userService.list();
+        return Result.success(users);
+    }
+
+    /**
      * 添加医生
      * @param doctor
      * @return

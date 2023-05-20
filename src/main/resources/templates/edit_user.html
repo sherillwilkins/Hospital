@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>管理员</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Layui CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/layui/css/layui.css}">
+    <!-- Main CSS-->
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/awesome/css/main.css}">
+    <!-- 自定义 -->
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/awesome/css/patch.css}">
+    <!-- Font-icon css-->
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/awesome/css/font-awesome.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/font_1332398_z4m8t7izbwk.css}">
+    <style>
+        .app-content {
+            margin: auto;
+            /*margin-left: 0px;*/
+            /*margin-top: 0px !important;*/
+        }
+
+        .app-content {
+            padding: 0 12px;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+<main class="app-content">
+    <div class="row">
+        <div class="col-md-12">
+            <form id="admin-useredit">
+                <div class="tile">
+                    <div class="tile-body">
+                        <div class="form-group">
+                            <label class="control-label">用户账号</label>
+                            <input class="form-control" type="text" name="user" th:value="${user.username}"
+                                   placeholder="用户账号">
+                            <input type="hidden" name="id" th:value="${user.id}">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">角色类型</label>
+                            <input class="form-control" type="text" th:value="${user.role}"
+                                   disabled="disabled" placeholder="角色类型">
+                        </div>
+                    </div>
+                    <div class="tile-footer">
+                        <button class="btn btn-primary" name="submit" type="submit">
+                            <i class="fa fa-fw fa-lg fa-check-circle"></i>保存
+                        </button>
+                        <span style="color:#e60c0c"></span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+
+<!-- Essential javascripts for application to work-->
+<script th:src="@{/plugins/awesome/js/jquery-3.2.1.min.js}"></script>
+<script th:src="@{/plugins/awesome/js/popper.min.js}"></script>
+<script th:src="@{/plugins/awesome/js/bootstrap.min.js}"></script>
+<script th:src="@{/plugins/awesome/js/main.js}"></script>
+<!-- The javascript plugin to display page loading on top-->
+<script th:src="@{/plugins/awesome/js/plugins/pace.min.js}"></script>
+<!-- Page specific javascripts-->
+<script th:src="@{/plugins/awesome/js/plugins/chart.js}"></script>
+<!-- Data table plugin-->
+<script type="text/javascript" th:src="@{/plugins/awesome/js/plugins/jquery.dataTables.min.js}"></script>
+<script type="text/javascript" th:src="@{/plugins/awesome/js/plugins/dataTables.bootstrap.min.js}"></script>
+<script th:src="@{/plugins/layui/layui.all.js}"></script>
+
+<script>
+    $('#admin-useredit button').click(function () {
+        fd = new FormData(document.getElementById('admin-useredit'));
+        $.ajax({
+            url: '/admin/useredit',
+            type: "POST",
+            timeout: "5000",
+            dataType: "json",
+            contentType: 'application/x-www-form-urlencoded;charset=utf-8',
+            data: fd,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                if (data.code == "200") {
+                    layer.msg(data.msg, {time: 1500}, function () {
+                        window.parent.location.reload();//刷新父页面
+                    });
+                } else {
+                    layer.msg(data.msg);
+                }
+            },
+            error: function (XMLResponse) {
+                layer.msg(XMLResponse.error);
+            }
+        });
+    });
+</script>
+</body>
+</html>

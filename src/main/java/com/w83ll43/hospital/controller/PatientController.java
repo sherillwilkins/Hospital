@@ -8,6 +8,7 @@ import com.w83ll43.hospital.model.domain.User;
 import com.w83ll43.hospital.model.param.RegisteredOrderParam;
 import com.w83ll43.hospital.model.vo.FeeDetail;
 import com.w83ll43.hospital.service.BillService;
+import com.w83ll43.hospital.service.PatientService;
 import com.w83ll43.hospital.service.RegisteredOrderService;
 import com.w83ll43.hospital.service.UserService;
 import com.w83ll43.hospital.service.impl.PrescriptionServiceImpl;
@@ -25,6 +26,9 @@ public class PatientController {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private PatientService patientService;
 
     @Resource
     private BillService billService;
@@ -134,6 +138,27 @@ public class PatientController {
             feeDetails = registeredOrderService.getRegistrationFeeDetails(billId);
         }
         return Result.success(feeDetails);
+    }
+
+    /**
+     * 获取所有病人信息
+     * @return
+     */
+    @GetMapping("/list")
+    public Result<List<Patient>> getPatients() {
+        List<Patient> patients = patientService.list();
+        return Result.success(patients);
+    }
+
+    /**
+     * 根据 ID 获取病人信息
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    public Result<Patient> getPatientById(@PathVariable("id") Long id) {
+        Patient patient = patientService.getById(id);
+        return Result.success(patient);
     }
 
 }

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>管理员</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Layui CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/layui/css/layui.css}">
+    <!-- Main CSS-->
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/awesome/css/main.css}">
+    <!-- 自定义 -->
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/awesome/css/patch.css}">
+    <!-- Font-icon css-->
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/awesome/css/font-awesome.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/font_1332398_z4m8t7izbwk.css}">
+</head>
+<body>
+
+<main class="app-content">
+    <div class="app-title">
+        <ul class="app-breadcrumb breadcrumb side">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item">会员列表</li>
+        </ul>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tile">
+                <div class="tile-body">
+                    <table class="table table-hover table-bordered" id="sampleTable">
+                        <thead class="table-space">
+                        <tr>
+                            <th>挂号单编号</th>
+                            <th>挂号病人</th>
+                            <th>挂号科室</th>
+                            <th>挂号医生</th>
+                            <th>挂号时间</th>
+                            <th>缴费金额</th>
+                            <th>缴费状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody class="table-space">
+                        <tr th:each="user : ${users}">
+                            <td th:text="${user.id}"></td>
+                            <td th:text="${user.username}"></td>
+                            <td th:text="${user.role}"></td>
+                            <td th:text="${user.createTime}"></td>
+                            <td class="api-list-cz">
+                                <a class="btn btn-primary btn-sm" onclick="editRow(this)"
+                                   th:title="${user.id}">编辑</a>
+                                <a class="btn btn-primary btn-sm" onclick="delRow(this)"
+                                   th:title="${user.id}">去支付</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tile" style="margin-bottom: 0px;">
+                <div class="tile-body"> 2017 - 2019 Zero-Art All Rights Reserved</div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Essential javascripts for application to work-->
+<script th:src="@{/plugins/awesome/js/jquery-3.2.1.min.js}"></script>
+<script th:src="@{/plugins/awesome/js/popper.min.js}"></script>
+<script th:src="@{/plugins/awesome/js/bootstrap.min.js}"></script>
+<script th:src="@{/plugins/awesome/js/main.js}"></script>
+<!-- The javascript plugin to display page loading on top-->
+<script th:src="@{/plugins/awesome/js/plugins/pace.min.js}"></script>
+<!-- Page specific javascripts-->
+<script th:src="@{/plugins/awesome/js/plugins/chart.js}"></script>
+<!-- Data table plugin-->
+<script type="text/javascript" th:src="@{/plugins/awesome/js/plugins/jquery.dataTables.min.js}"></script>
+<script type="text/javascript" th:src="@{/plugins/awesome/js/plugins/dataTables.bootstrap.min.js}"></script>
+<script th:src="@{/plugins/layui/layui.all.js}"></script>
+
+<script type="text/javascript">
+    function editRow(_this) {
+        layer.open({
+            type: 2,
+            title: '接口编辑',
+            shadeClose: false,
+            shade: true,
+            maxmin: false, //开启最大化最小化按钮
+            area: ['85%', '80%'],
+            offset: "r",
+            content: ['/edit_user/' + _this.title]
+        });
+    }
+
+    //删除
+    function delRow(_this) {
+        var td = _this.parentNode;
+        var tr = td.parentNode;
+        var tbody = tr.parentNode;
+        //询问框
+        layer.confirm('确定删除接口？', {
+            title: "提示",
+            btn: ['删除', '取消 '] //按钮
+        }, function () {
+            fd = new FormData();
+            fd.append("id", _this.title);
+            $.ajax({
+                url: '/admin/deluser',
+                type: "POST",
+                timeout: "3000",
+                dataType: "json",
+                contentType: 'application/x-www-form-urlencoded;charset=utf-8',
+                data: fd,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    if (data.code == "200") {
+                        layer.msg(data.msg);
+                        tbody.removeChild(tr);
+                    } else {
+                        layer.msg(data.msg);
+                    }
+                },
+                error: function (XMLResponse) {
+                    layer.msg(XMLResponse.error);
+                }
+            });
+        });
+    }
+
+</script>
+
+</body>
+</html>

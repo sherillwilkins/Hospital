@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" style="width: 100%; height: 100%;">
+
+<head>
+    <title>管理员</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Layui CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/layui/css/layui.css}">
+    <!-- Main CSS-->
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/awesome/css/main.css}">
+    <!-- 自定义 -->
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/awesome/css/patch.css}">
+    <!-- Font-icon css-->
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/awesome/css/font-awesome.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/font_1332398_z4m8t7izbwk.css}">
+</head>
+
+<body class="app sidebar-mini rtl" style="width: 100%; height: 100%">
+<!-- Navbar-->
+<header class="app-header"><a class="app-header__logo" href="">ZeroAet</a>
+    <!-- Sidebar toggle button-->
+    <a class="app-sidebar__toggle" href="#" aria-label="Hide Sidebar"></a>
+    <!-- Navbar Right Menu-->
+    <ul class="app-nav">
+        <!-- User Menu-->
+        <li class="dropdown">
+            <a class="app-nav__item dropdown-item" href="#" data-toggle="dropdown" aria-label="Open Profile Menu">
+                <i class="fa fa-user fa-lg"></i>
+                <span>管理员</span>
+            </a>
+            <ul class="dropdown-menu settings-menu dropdown-menu-right">
+                <li>
+                    <a class="dropdown-item" th:href="@{/logout}">
+                        <i class="fa fa-sign-out fa-lg"></i> 退出
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</header>
+<!-- Sidebar menu-->
+<div class="app-sidebar__overlay" data-toggle="sidebar"></div>
+<aside class="app-sidebar">
+    <div class="app-sidebar__user">
+        <img class="app-sidebar__user-avatar" th:src="@{/images/favicon.ico}" alt="User Image">
+        <div>
+            <p class="app-sidebar__user-name">你好，管理员</p>
+            <p class="app-sidebar__user-designation" th:text="${#dates.format(now, 'yyyy-MM-dd HH:mm:ss')}"></p>
+        </div>
+    </div>
+
+    <ul class="app-menu">
+        <li>
+            <a class="app-menu__item" th:href="@{/index1}" target="frame">
+                <i class="app-menu__icon fa fa-dashboard"></i>
+                <span class="app-menu__label">首页</span>
+            </a>
+        </li>
+
+        <li class="treeview">
+            <a class="app-menu__item" href="#" data-toggle="treeview">
+                <i class="app-menu__icon fa fa-users"></i>
+                <span class="app-menu__label">用户管理</span>
+                <i class="treeview-indicator fa fa-angle-right"></i>
+            </a>
+            <ul class="treeview-menu">
+                <li>
+                    <a class="treeview-item" th:href="@{/add_user}" target="frame">
+                        <i class="icon fa fa-circle-o"></i>添加用户
+                    </a>
+                </li>
+                <li>
+                    <a class="treeview-item" th:href="@{/users}" target="frame">
+                        <i class="icon fa fa-circle-o"></i>用户列表
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="treeview">
+            <a class="app-menu__item" href="#" data-toggle="treeview">
+                <i class="app-menu__icon fa fa-users"></i>
+                <span class="app-menu__label">医生管理</span>
+                <i class="treeview-indicator fa fa-angle-right"></i>
+            </a>
+            <ul class="treeview-menu">
+                <li>
+                    <a class="treeview-item" th:href="@{/add_doctor}" target="frame">
+                        <i class="icon fa fa-circle-o"></i>添加医生
+                    </a>
+                </li>
+                <li>
+                    <a class="treeview-item" th:href="@{/doctors}" target="frame">
+                        <i class="icon fa fa-circle-o"></i>医生列表
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="treeview">
+            <a class="app-menu__item" href="#" data-toggle="treeview">
+                <i class="app-menu__icon fa fa-users"></i>
+                <span class="app-menu__label">病人管理</span>
+                <i class="treeview-indicator fa fa-angle-right"></i>
+            </a>
+            <ul class="treeview-menu">
+                <li>
+                    <a class="treeview-item" th:href="@{/add_patient}" target="frame">
+                        <i class="icon fa fa-circle-o"></i>添加病人
+                    </a>
+                </li>
+                <li>
+                    <a class="treeview-item" th:href="@{/patients}" target="frame">
+                        <i class="icon fa fa-circle-o"></i>病人列表
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="treeview">
+            <a class="app-menu__item" href="#" data-toggle="treeview">
+                <i class="app-menu__icon fa fa-users"></i>
+                <span class="app-menu__label">药品管理</span>
+                <i class="treeview-indicator fa fa-angle-right"></i>
+            </a>
+            <ul class="treeview-menu">
+                <li>
+                    <a class="treeview-item" th:href="@{/add_drug}" target="frame">
+                        <i class="icon fa fa-circle-o"></i>
+                        添加药品
+                    </a>
+                </li>
+                <li>
+                    <a class="treeview-item" th:href="@{/drugs}" target="frame">
+                        <i class="icon fa fa-circle-o"></i>
+                        药品列表
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li>
+            <a class="app-menu__item" th:href="@{/text}" target="frame">
+                <i class="app-menu__icon fa fa-edit"></i>
+                <span class="app-menu__label">订单记录</span>
+            </a>
+        </li>
+
+<!--        <li>-->
+<!--            <a class="app-menu__item" href="#" target="_blank">-->
+<!--                <i class="app-menu__icon fa fa-home"></i>-->
+<!--                <span class="app-menu__label">访问前台</span>-->
+<!--            </a>-->
+<!--        </li>-->
+    </ul>
+</aside>
+
+<iframe th:src="@{/index1}" name="frame" style="width: 100%; height: 100%;" frameborder="0" scrolling="no">
+
+</iframe>
+
+<!-- Essential javascripts for application to work-->
+<script th:src="@{/plugins/awesome/js/jquery-3.2.1.min.js}"></script>
+<script th:src="@{/plugins/awesome/js/popper.min.js}"></script>
+<script th:src="@{/plugins/awesome/js/bootstrap.min.js}"></script>
+<script th:src="@{/plugins/awesome/js/main.js}"></script>
+<!-- The javascript plugin to display page loading on top-->
+<script th:src="@{/plugins/awesome/js/plugins/pace.min.js}"></script>
+<!-- Page specific javascripts-->
+<script th:src="@{/plugins/awesome/js/plugins/chart.js}"></script>
+<!-- Data table plugin-->
+<script type="text/javascript" th:src="@{/plugins/awesome/js/plugins/jquery.dataTables.min.js}"></script>
+<script type="text/javascript" th:src="@{/plugins/awesome/js/plugins/dataTables.bootstrap.min.js}"></script>
+<script th:src="@{/plugins/layui/layui.all.js}"></script>
+<script>
+    layui.use('carousel', function () {
+        var carousel = layui.carousel;
+        //建造实例
+        carousel.render({
+            elem: '#test-carousel-normal',
+            width: '100%' //设置容器宽度
+            ,
+            height: '238px' //设置容器宽度
+            ,
+            arrow: 'always' //始终显示箭头
+            //,anim: 'updown' //切换动画方式
+        });
+    });
+</script>

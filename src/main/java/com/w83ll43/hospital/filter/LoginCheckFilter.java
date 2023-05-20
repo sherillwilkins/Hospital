@@ -35,6 +35,8 @@ public class LoginCheckFilter implements Filter {
         // 不需要处理的请求路径
         String[] urls = new String[]{
                 "/admin/login",
+                "/login",
+                "/plugins/**"
         };
 
         // 2、判断本次请求是否需要处理
