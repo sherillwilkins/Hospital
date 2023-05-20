@@ -109,23 +109,19 @@
             title: "提示",
             btn: ['删除', '取消 '] //按钮
         }, function () {
-            fd = new FormData();
-            fd.append("id", _this.title);
             $.ajax({
-                url: '/admin/deluser',
-                type: "POST",
+                url: '/admin/patient/' + _this.title,
+                type: "DELETE",
                 timeout: "3000",
                 dataType: "json",
-                contentType: 'application/x-www-form-urlencoded;charset=utf-8',
-                data: fd,
-                contentType: false,
+                contentType: 'application/json',
                 processData: false,
                 success: function (data) {
                     if (data.code == "200") {
-                        layer.msg(data.msg);
+                        layer.msg(data.message);
                         tbody.removeChild(tr);
                     } else {
-                        layer.msg(data.msg);
+                        layer.msg(data.message);
                     }
                 },
                 error: function (XMLResponse) {

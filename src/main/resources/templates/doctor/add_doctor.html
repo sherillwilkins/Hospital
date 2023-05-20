@@ -24,7 +24,7 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <form id="admin-adduser">
+            <form id="add-doctor">
                 <div class="tile">
                     <div class="tile-body">
                         <div class="col-lg-6">
@@ -51,8 +51,8 @@
                                 <input class="form-control" id="telephone" type="text" name="telephone" value="" placeholder="联系方式">
                             </div>
                             <div class="form-group">
-                                <label for="department">所属部门</label>
-                                <input class="form-control" id="department" type="text" name="department" value="" placeholder="所属部门">
+                                <label for="departmentId">所属部门</label>
+                                <input class="form-control" id="departmentId" type="text" name="departmentId" value="" placeholder="所属部门">
                             </div>
                         </div>
                     </div>
@@ -100,28 +100,33 @@
             height: '238px' //设置容器宽度
             ,
             arrow: 'always' //始终显示箭头
-            //,anim: 'updown' //切换动画方式
         });
     });
 
-    $('#admin-adduser button').click(function () {
-        fd = new FormData(document.getElementById('admin-adduser'));
+    $('#add-doctor button').click(function () {
+        /*实例化表单数据*/
+        var fields = $('#add-doctor').serializeArray();
+
+        var obj = {}; // 声明一个对象
+        $.each(fields, function (index, field) {
+            obj[field.name] = field.value; // 通过变量 将属性值 属性一起放到对象中
+        })
+
         $.ajax({
-            url: '/admin/adduser',
+            url: '/admin/doctor',
             type: "POST",
             timeout: "5000",
             dataType: "json",
-            contentType: 'application/x-www-form-urlencoded;charset=utf-8',
-            data: fd,
-            contentType: false,
+            contentType: 'application/json',
+            data: JSON.stringify(obj),
             processData: false,
             success: function (data) {
                 if (data.code == "200") {
-                    layer.msg(data.msg, {time: 1500}, function () {
-                        window.location.href = "/<?php echo ADMIN_PATH;?>/userinfo.html";
+                    layer.msg(data.message, {time: 1500}, function () {
+                        window.location.href = "/doctors";
                     });
                 } else {
-                    layer.msg(data.msg);
+                    layer.msg(data.message);
                 }
             },
             error: function (XMLResponse) {

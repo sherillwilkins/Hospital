@@ -20,7 +20,7 @@
     <div class="app-title">
         <ul class="app-breadcrumb breadcrumb side">
             <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-            <li class="breadcrumb-item">药品列表</li>
+            <li class="breadcrumb-item">病房列表</li>
         </ul>
     </div>
     <div class="row">
@@ -31,25 +31,21 @@
                         <thead class="table-space">
                         <tr>
                             <th>编号</th>
-                            <th>名称</th>
-                            <th>描述</th>
-                            <th>价格</th>
-                            <th>库存</th>
+                            <th>位置</th>
+                            <th>所属科室</th>
                             <th>操作</th>
                         </tr>
                         </thead>
                         <tbody class="table-space">
-                        <tr th:each="drug : ${drugs}">
-                            <td th:text="${drug.id}"></td>
-                            <td th:text="${drug.name}"></td>
-                            <td th:text="${drug.specification}"></td>
-                            <td th:text="${drug.price}"></td>
-                            <td th:text="${drug.stack}"></td>
+                        <tr th:each="ward : ${wards}">
+                            <td th:text="${ward.id}"></td>
+                            <td th:text="${ward.location}"></td>
+                            <td th:text="${ward.departmentId}"></td>
                             <td class="api-list-cz">
                                 <a class="btn btn-primary btn-sm" onclick="editRow(this)"
-                                   th:title="${drug.id}">编辑</a>
+                                   th:title="${ward.id}">编辑</a>
                                 <a class="btn btn-primary btn-sm" onclick="delRow(this)"
-                                   th:title="${drug.id}">删除</a>
+                                   th:title="${ward.id}">删除</a>
                             </td>
                         </tr>
                         </tbody>
@@ -91,7 +87,7 @@
             maxmin: false, //开启最大化最小化按钮
             area: ['85%', '80%'],
             offset: "r",
-            content: ['/edit_drug/' + _this.title]
+            content: ['/edit_ward/' + _this.title]
         });
     }
 
@@ -105,19 +101,23 @@
             title: "提示",
             btn: ['删除', '取消 '] //按钮
         }, function () {
+            fd = new FormData();
+            fd.append("id", _this.title);
             $.ajax({
-                url: '/admin/drug/' + _this.title,
-                type: "DELETE",
+                url: '/admin/deluser',
+                type: "POST",
                 timeout: "3000",
                 dataType: "json",
-                contentType: 'application/json',
+                contentType: 'application/x-www-form-urlencoded;charset=utf-8',
+                data: fd,
+                contentType: false,
                 processData: false,
                 success: function (data) {
                     if (data.code == "200") {
-                        layer.msg(data.message);
+                        layer.msg(data.msg);
                         tbody.removeChild(tr);
                     } else {
-                        layer.msg(data.message);
+                        layer.msg(data.msg);
                     }
                 },
                 error: function (XMLResponse) {

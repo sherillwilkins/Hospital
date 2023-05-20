@@ -20,7 +20,7 @@
     <div class="app-title">
         <ul class="app-breadcrumb breadcrumb side">
             <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-            <li class="breadcrumb-item">药品列表</li>
+            <li class="breadcrumb-item">处方缴费单</li>
         </ul>
     </div>
     <div class="row">
@@ -30,26 +30,32 @@
                     <table class="table table-hover table-bordered" id="sampleTable">
                         <thead class="table-space">
                         <tr>
-                            <th>编号</th>
-                            <th>名称</th>
-                            <th>描述</th>
-                            <th>价格</th>
-                            <th>库存</th>
+                            <th>处方单编号</th>
+                            <th>病人姓名</th>
+                            <th>医生姓名</th>
+                            <th>症状描述</th>
+                            <th>开具日期</th>
+                            <th>是否住院</th>
+                            <th>缴费金额</th>
+                            <th>缴费状态</th>
                             <th>操作</th>
                         </tr>
                         </thead>
                         <tbody class="table-space">
-                        <tr th:each="drug : ${drugs}">
-                            <td th:text="${drug.id}"></td>
-                            <td th:text="${drug.name}"></td>
-                            <td th:text="${drug.specification}"></td>
-                            <td th:text="${drug.price}"></td>
-                            <td th:text="${drug.stack}"></td>
+                        <tr th:each="prescriptionVo : ${prescriptionVos}">
+                            <td th:text="${prescriptionVo.id}"></td>
+                            <td th:text="${prescriptionVo.patientName}"></td>
+                            <td th:text="${prescriptionVo.doctorName}"></td>
+                            <td th:text="${prescriptionVo.symptom}"></td>
+                            <td th:text="${prescriptionVo.date}"></td>
+                            <td th:text="${prescriptionVo.hospitalized}"></td>
+                            <td th:text="${prescriptionVo.amount}"></td>
+                            <td th:text="${prescriptionVo.status}"></td>
                             <td class="api-list-cz">
-                                <a class="btn btn-primary btn-sm" onclick="editRow(this)"
-                                   th:title="${drug.id}">编辑</a>
+                                <a class="btn btn-primary btn-sm" target="frame"
+                                   th:href="@{/prescriptionItemsFeeDetail/{id}(id=${prescriptionVo.billId})}">查看明细</a>
                                 <a class="btn btn-primary btn-sm" onclick="delRow(this)"
-                                   th:title="${drug.id}">删除</a>
+                                   th:title="${prescriptionVo.id}">去支付</a>
                             </td>
                         </tr>
                         </tbody>
@@ -82,18 +88,6 @@
 <script th:src="@{/plugins/layui/layui.all.js}"></script>
 
 <script type="text/javascript">
-    function editRow(_this) {
-        layer.open({
-            type: 2,
-            title: '接口编辑',
-            shadeClose: false,
-            shade: true,
-            maxmin: false, //开启最大化最小化按钮
-            area: ['85%', '80%'],
-            offset: "r",
-            content: ['/edit_drug/' + _this.title]
-        });
-    }
 
     //删除
     function delRow(_this) {
@@ -105,19 +99,23 @@
             title: "提示",
             btn: ['删除', '取消 '] //按钮
         }, function () {
+            fd = new FormData();
+            fd.append("id", _this.title);
             $.ajax({
-                url: '/admin/drug/' + _this.title,
-                type: "DELETE",
+                url: '/admin/deluser',
+                type: "POST",
                 timeout: "3000",
                 dataType: "json",
-                contentType: 'application/json',
+                contentType: 'application/x-www-form-urlencoded;charset=utf-8',
+                data: fd,
+                contentType: false,
                 processData: false,
                 success: function (data) {
                     if (data.code == "200") {
-                        layer.msg(data.message);
+                        layer.msg(data.msg);
                         tbody.removeChild(tr);
                     } else {
-                        layer.msg(data.message);
+                        layer.msg(data.msg);
                     }
                 },
                 error: function (XMLResponse) {

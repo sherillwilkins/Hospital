@@ -19,37 +19,28 @@
     <div class="app-title">
         <ul class="app-breadcrumb breadcrumb">
             <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-            <li class="breadcrumb-item"><a href="">添加药品</a></li>
+            <li class="breadcrumb-item"><a href="">添加用户</a></li>
         </ul>
     </div>
     <div class="row">
         <div class="col-md-12">
-            <form id="add-drug">
+            <form id="admin-adduser">
                 <div class="tile">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <label class="control-label" for="name">药品名称</label>
-                                <input class="form-control" type="text" id="name" name="name" value=""
-                                       placeholder="药品名称">
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label" for="price">药品价格</label>
-                                <input class="form-control" type="text" id="price" name="price" value=""
-                                       placeholder="药品价格">
-                            </div>
+                    <div class="tile-body">
+                        <div class="form-group">
+                            <label class="control-label" for="patient_id">病人编号</label>
+                            <input class="form-control" type="text" id="patient_id" name="patient_id" value=""
+                             placeholder="病人编号">
                         </div>
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <label class="control-label" for="specification">药品描述</label>
-                                <input class="form-control" type="text" id="specification" name="specification" value=""
-                                       placeholder="药品描述">
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label" for="stack">库存</label>
-                                <input class="form-control" type="text" id="stack" name="stack" value=""
-                                       placeholder="库存">
-                            </div>
+                        <div class="form-group">
+                            <label class="control-label" for="department_id">挂号科室</label>
+                            <input class="form-control" type="text" id="department_id" name="department_id" value="" 
+                            placeholder="挂号科室">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="doctor_id">挂号医生</label>
+                            <input class="form-control" type="text" id="doctor_id" name="doctor_id" value="" 
+                            placeholder="挂号医生">
                         </div>
                     </div>
                     <div class="tile-footer">
@@ -96,34 +87,28 @@
             height: '238px' //设置容器宽度
             ,
             arrow: 'always' //始终显示箭头
+            //,anim: 'updown' //切换动画方式
         });
     });
 
-    $('#add-drug button').click(function () {
-
-        /*实例化表单数据*/
-        var fields = $('#add-drug').serializeArray();
-
-        var obj = {}; // 声明一个对象
-        $.each(fields, function (index, field) {
-            obj[field.name] = field.value; // 通过变量 将属性值 属性一起放到对象中
-        })
-
+    $('#admin-adduser button').click(function () {
+        fd = new FormData(document.getElementById('admin-adduser'));
         $.ajax({
-            url: '/admin/drug',
+            url: '/admin/adduser',
             type: "POST",
             timeout: "5000",
             dataType: "json",
-            contentType: 'application/json',
-            data: JSON.stringify(obj),
+            contentType: 'application/x-www-form-urlencoded;charset=utf-8',
+            data: fd,
+            contentType: false,
             processData: false,
             success: function (data) {
                 if (data.code == "200") {
-                    layer.msg(data.message, {time: 1500}, function () {
-                        window.location.href = "/drugs";
+                    layer.msg(data.msg, {time: 1500}, function () {
+                        window.location.href = "/<?php echo ADMIN_PATH;?>/userinfo.html";
                     });
                 } else {
-                    layer.msg(data.message);
+                    layer.msg(data.msg);
                 }
             },
             error: function (XMLResponse) {

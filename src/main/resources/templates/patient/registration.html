@@ -19,42 +19,35 @@
     <div class="app-title">
         <ul class="app-breadcrumb breadcrumb">
             <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-            <li class="breadcrumb-item"><a href="">添加药品</a></li>
+            <li class="breadcrumb-item"><a href="">挂号</a></li>
         </ul>
     </div>
     <div class="row">
         <div class="col-md-12">
-            <form id="add-drug">
+            <form id="patient-registration">
                 <div class="tile">
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label class="control-label" for="name">药品名称</label>
-                                <input class="form-control" type="text" id="name" name="name" value=""
-                                       placeholder="药品名称">
+                                <label class="control-label" for="patientId">挂号病人</label>
+                                <input class="form-control" type="text" id="patientId" name="patientId" value=""
+                                       placeholder="挂号病人">
                             </div>
                             <div class="form-group">
-                                <label class="control-label" for="price">药品价格</label>
-                                <input class="form-control" type="text" id="price" name="price" value=""
-                                       placeholder="药品价格">
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <label class="control-label" for="specification">药品描述</label>
-                                <input class="form-control" type="text" id="specification" name="specification" value=""
-                                       placeholder="药品描述">
+                                <label class="control-label" for="departmentId">挂号科室</label>
+                                <input class="form-control" type="text" id="departmentId" name="departmentId" value=""
+                                       placeholder="挂号科室">
                             </div>
                             <div class="form-group">
-                                <label class="control-label" for="stack">库存</label>
-                                <input class="form-control" type="text" id="stack" name="stack" value=""
-                                       placeholder="库存">
+                                <label class="control-label" for="doctorId">挂号医生</label>
+                                <input class="form-control" type="text" id="doctorId" name="doctorId" value=""
+                                       placeholder="挂号医生">
                             </div>
                         </div>
                     </div>
                     <div class="tile-footer">
                         <button class="btn btn-primary" type="button">
-                            <i class="fa fa-fw fa-lg fa-check-circle"></i>添加
+                            <i class="fa fa-fw fa-lg fa-check-circle"></i>挂号
                         </button>
                         <span style="color:#e60c0c"></span>
                     </div>
@@ -96,13 +89,13 @@
             height: '238px' //设置容器宽度
             ,
             arrow: 'always' //始终显示箭头
+            //,anim: 'updown' //切换动画方式
         });
     });
 
-    $('#add-drug button').click(function () {
-
+    $('#patient-registration button').click(function () {
         /*实例化表单数据*/
-        var fields = $('#add-drug').serializeArray();
+        var fields = $('#patient-registration').serializeArray();
 
         var obj = {}; // 声明一个对象
         $.each(fields, function (index, field) {
@@ -110,7 +103,7 @@
         })
 
         $.ajax({
-            url: '/admin/drug',
+            url: '/patient/registration',
             type: "POST",
             timeout: "5000",
             dataType: "json",
@@ -120,7 +113,7 @@
             success: function (data) {
                 if (data.code == "200") {
                     layer.msg(data.message, {time: 1500}, function () {
-                        window.location.href = "/drugs";
+                        window.location.href = "#";
                     });
                 } else {
                     layer.msg(data.message);

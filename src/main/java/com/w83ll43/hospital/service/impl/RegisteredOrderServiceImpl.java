@@ -1,17 +1,15 @@
 package com.w83ll43.hospital.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.w83ll43.hospital.common.BaseContext;
 import com.w83ll43.hospital.common.CustomException;
 import com.w83ll43.hospital.mapper.RegisteredOrderMapper;
-import com.w83ll43.hospital.model.domain.Bill;
-import com.w83ll43.hospital.model.domain.RegisteredOrder;
-import com.w83ll43.hospital.model.domain.User;
+import com.w83ll43.hospital.model.domain.*;
 import com.w83ll43.hospital.model.param.RegisteredOrderParam;
 import com.w83ll43.hospital.model.vo.FeeDetail;
-import com.w83ll43.hospital.service.BillService;
-import com.w83ll43.hospital.service.RegisteredOrderService;
-import com.w83ll43.hospital.service.UserService;
+import com.w83ll43.hospital.model.vo.Registration;
+import com.w83ll43.hospital.service.*;
 import com.w83ll43.hospital.utils.DateUtils;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +33,15 @@ public class RegisteredOrderServiceImpl extends ServiceImpl<RegisteredOrderMappe
     @Resource
     private BillService billService;
 
+    @Resource
+    private DoctorService doctorService;
+
+    @Resource
+    private PatientService patientService;
+
+    @Resource
+    private DepartmentService departmentService;
+
     /**
      * 创建挂单号
      *
@@ -56,7 +63,7 @@ public class RegisteredOrderServiceImpl extends ServiceImpl<RegisteredOrderMappe
 
         // 4、创建挂单号实体
         RegisteredOrder registeredOrder = new RegisteredOrder();
-        registeredOrder.setPatientId(id);
+        registeredOrder.setPatientId(registeredOrderParam.getPatientId());
 
         // TODO 实际上需要判断医生是否属于这个科室
         registeredOrder.setDepartmentId(registeredOrderParam.getDepartmentId());
@@ -96,6 +103,51 @@ public class RegisteredOrderServiceImpl extends ServiceImpl<RegisteredOrderMappe
 
         feeDetails.add(feeDetail);
         return feeDetails;
+    }
+
+
+    public Registration getRegistrationByBillId(Long billId) {
+        Registration registration = new Registration();
+        LambdaQueryWrapper<RegisteredOrder> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(RegisteredOrder::getBillId, billId);
+
+        RegisteredOrder registeredOrder = this.getOne(lambdaQueryWrapper);
+        registration.setId(registeredOrder.getId());
+
+        Doctor doctor = doctorService.getById(registeredOrder.getDoctorId());
+        registration.setDoctorName(doctor.getName());
+
+        Patient patient = patientService.getById(registeredOrder.getPatientId());
+        registration.setPatientName(patient.getName());
+
+        Department department = departmentService.getById(registeredOrder.getDepartmentId());
+        registration.setDepartmentName(department.getName());
+
+        registration.setDate(registeredOrder.getDate());
+
+        Bill bill = billService.getById(billId);
+        registration.setAmount(bill.getAmount());
+
+        registration.setStatus(bill.getStatus());
+        return registration;
+    }
+
+    @Override
+    public List<Registration> getRegistrations() {
+        List<Registration> registrations = new ArrayList<>();
+
+        LambdaQueryWrapper<Bill> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        // TODO 类型 1 挂号单 常量
+        lambdaQueryWrapper.eq(Bill::getType, 1);
+
+        List<Bill> bills = billService.list(lambdaQueryWrapper);
+        for (Bill bill : bills) {
+            Registration registration = getRegistrationByBillId(bill.getId());
+            registrations.add(registration);
+        }
+
+        return registrations;
+
     }
 }
 

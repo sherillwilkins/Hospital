@@ -40,6 +40,34 @@ public class Result<T> implements Serializable {
     }
 
     /**
+     * 成功
+     * @param message
+     * @param object
+     * @return
+     * @param <T>
+     */
+    public static <T> Result<T> success(String message, T object) {
+        Result<T> result = new Result<>();
+        result.message = message;
+        result.code = 200;
+        result.data = object;
+        return result;
+    }
+
+    /**
+     * 成功
+     * @param message
+     * @return
+     * @param <T>
+     */
+    public static <T> Result<T> success(String message) {
+        Result<T> result = new Result<>();
+        result.message = message;
+        result.code = 200;
+        return result;
+    }
+
+    /**
      * 失败
      * @param message
      * @return

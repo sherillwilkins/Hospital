@@ -10,10 +10,8 @@ import com.w83ll43.hospital.model.domain.*;
 import com.w83ll43.hospital.model.param.PrescriptionDrugParam;
 import com.w83ll43.hospital.model.param.PrescriptionParam;
 import com.w83ll43.hospital.model.vo.FeeDetail;
-import com.w83ll43.hospital.service.BillService;
-import com.w83ll43.hospital.service.PrescriptionDrugItemService;
-import com.w83ll43.hospital.service.PrescriptionService;
-import com.w83ll43.hospital.service.UserService;
+import com.w83ll43.hospital.model.vo.PrescriptionVo;
+import com.w83ll43.hospital.service.*;
 import com.w83ll43.hospital.utils.DateUtils;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +35,12 @@ public class PrescriptionServiceImpl extends ServiceImpl<PrescriptionMapper, Pre
 
     @Resource
     private BillService billService;
+
+    @Resource
+    private PatientService patientService;
+
+    @Resource
+    private DoctorService doctorService;
 
     @Resource
     private PrescriptionDrugItemService prescriptionDrugItemService;
@@ -151,6 +155,50 @@ public class PrescriptionServiceImpl extends ServiceImpl<PrescriptionMapper, Pre
         return feeDetails;
     }
 
+
+    public PrescriptionVo getPrescriptionVoByBillId(Long billId) {
+        PrescriptionVo prescriptionVo = new PrescriptionVo();
+
+        LambdaQueryWrapper<Prescription> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(Prescription::getBillId, billId);
+
+        Prescription prescription = this.getOne(lambdaQueryWrapper);
+        prescriptionVo.setId(prescription.getId());
+
+        Patient patient = patientService.getById(prescription.getPatientId());
+        prescriptionVo.setPatientName(patient.getName());
+
+        Doctor doctor = doctorService.getById(prescription.getDoctorId());
+        prescriptionVo.setDoctorName(doctor.getName());
+
+        prescriptionVo.setSymptom(prescription.getSymptom());
+        prescriptionVo.setDate(prescription.getDate());
+        prescriptionVo.setHospitalized(prescription.getHospitalized());
+
+        Bill bill = billService.getById(billId);
+        prescriptionVo.setBillId(billId);
+        prescriptionVo.setAmount(bill.getAmount());
+        prescriptionVo.setStatus(bill.getStatus());
+
+        return prescriptionVo;
+    }
+
+    @Override
+    public List<PrescriptionVo> getPrescriptionVos() {
+        List<PrescriptionVo> prescriptionVos = new ArrayList<>();
+
+        LambdaQueryWrapper<Bill> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        // TODO 处方单类型
+        lambdaQueryWrapper.eq(Bill::getType, 2);
+
+        List<Bill> bills = billService.list(lambdaQueryWrapper);
+        for (Bill bill : bills) {
+            PrescriptionVo prescriptionVo = getPrescriptionVoByBillId(bill.getId());
+            prescriptionVos.add(prescriptionVo);
+        }
+
+        return prescriptionVos;
+    }
 }
 
 

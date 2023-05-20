@@ -46,7 +46,7 @@
         <img class="app-sidebar__user-avatar" th:src="@{/images/favicon.ico}" alt="User Image">
         <div>
             <p class="app-sidebar__user-name">你好，管理员</p>
-            <p class="app-sidebar__user-designation" th:text="${#dates.format(now, 'yyyy-MM-dd HH:mm:ss')}"></p>
+            <p class="app-sidebar__user-designation" th:text="${#dates.format(now, 'yyyy-MM-dd')}"></p>
         </div>
     </div>
 
@@ -71,7 +71,7 @@
                     </a>
                 </li>
                 <li>
-                    <a class="treeview-item" th:href="@{/users}" target="frame">
+                    <a class="treeview-item" th:href="@{/templates/user}" target="frame">
                         <i class="icon fa fa-circle-o"></i>用户列表
                     </a>
                 </li>
@@ -140,6 +140,167 @@
             </ul>
         </li>
 
+        <li class="treeview">
+            <a class="app-menu__item" href="#" data-toggle="treeview">
+                <i class="app-menu__icon fa fa-users"></i>
+                <span class="app-menu__label">费用明细</span>
+                <i class="treeview-indicator fa fa-angle-right"></i>
+            </a>
+            <ul class="treeview-menu">
+                <li>
+                    <a class="treeview-item" th:href="@{/registrations}" target="frame">
+                        <i class="icon fa fa-circle-o"></i>
+                        挂号缴费单
+                    </a>
+                </li>
+                <li>
+                    <a class="treeview-item" th:href="@{/prescriptions}" target="frame">
+                        <i class="icon fa fa-circle-o"></i>
+                        处方缴费单
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="treeview">
+            <a class="app-menu__item" href="#" data-toggle="treeview">
+                <i class="app-menu__icon fa fa-users"></i>
+                <span class="app-menu__label">病房管理</span>
+                <i class="treeview-indicator fa fa-angle-right"></i>
+            </a>
+            <ul class="treeview-menu">
+                <li>
+                    <a class="treeview-item" th:href="@{/add_ward}" target="frame">
+                        <i class="icon fa fa-circle-o"></i>
+                        添加病房
+                    </a>
+                </li>
+                <li>
+                    <a class="treeview-item" th:href="@{/wards}" target="frame">
+                        <i class="icon fa fa-circle-o"></i>
+                        病房列表
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="treeview">
+            <a class="app-menu__item" href="#" data-toggle="treeview">
+                <i class="app-menu__icon fa fa-users"></i>
+                <span class="app-menu__label">病床管理</span>
+                <i class="treeview-indicator fa fa-angle-right"></i>
+            </a>
+            <ul class="treeview-menu">
+                <li>
+                    <a class="treeview-item" th:href="@{/add_bed}" target="frame">
+                        <i class="icon fa fa-circle-o"></i>
+                        添加病床
+                    </a>
+                </li>
+                <li>
+                    <a class="treeview-item" th:href="@{/beds}" target="frame">
+                        <i class="icon fa fa-circle-o"></i>
+                        病床列表
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="treeview">
+            <a class="app-menu__item" href="#" data-toggle="treeview">
+                <i class="app-menu__icon fa fa-users"></i>
+                <span class="app-menu__label">部门管理</span>
+                <i class="treeview-indicator fa fa-angle-right"></i>
+            </a>
+            <ul class="treeview-menu">
+                <li>
+                    <a class="treeview-item" th:href="@{/add_section}" target="frame">
+                        <i class="icon fa fa-circle-o"></i>
+                        添加部门
+                    </a>
+                </li>
+                <li>
+                    <a class="treeview-item" th:href="@{/sections}" target="frame">
+                        <i class="icon fa fa-circle-o"></i>
+                        部门列表
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="treeview">
+            <a class="app-menu__item" href="#" data-toggle="treeview">
+                <i class="app-menu__icon fa fa-users"></i>
+                <span class="app-menu__label">科室管理</span>
+                <i class="treeview-indicator fa fa-angle-right"></i>
+            </a>
+            <ul class="treeview-menu">
+                <li>
+                    <a class="treeview-item" th:href="@{/add_department}" target="frame">
+                        <i class="icon fa fa-circle-o"></i>
+                        添加科室
+                    </a>
+                </li>
+                <li>
+                    <a class="treeview-item" th:href="@{/departments}" target="frame">
+                        <i class="icon fa fa-circle-o"></i>
+                        科室列表
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="treeview">
+            <a class="app-menu__item" href="#" data-toggle="treeview">
+                <i class="app-menu__icon fa fa-users"></i>
+                <span class="app-menu__label">住院档案管理</span>
+                <i class="treeview-indicator fa fa-angle-right"></i>
+            </a>
+            <ul class="treeview-menu">
+                <li>
+                    <a class="treeview-item" th:href="@{/add_file}" target="frame">
+                        <i class="icon fa fa-circle-o"></i>
+                        添加住院档案
+                    </a>
+                </li>
+                <li>
+                    <a class="treeview-item" th:href="@{/files}" target="frame">
+                        <i class="icon fa fa-circle-o"></i>
+                        住院档案列表
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="treeview">
+            <a class="app-menu__item" href="#" data-toggle="treeview">
+                <i class="app-menu__icon fa fa-users"></i>
+                <span class="app-menu__label">住院记录管理</span>
+                <i class="treeview-indicator fa fa-angle-right"></i>
+            </a>
+            <ul class="treeview-menu">
+                <li>
+                    <a class="treeview-item" th:href="@{/add_record}" target="frame">
+                        <i class="icon fa fa-circle-o"></i>
+                        添加住院记录
+                    </a>
+                </li>
+                <li>
+                    <a class="treeview-item" th:href="@{/records}" target="frame">
+                        <i class="icon fa fa-circle-o"></i>
+                        住院记录列表
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li>
+            <a class="app-menu__item" th:href="@{/registration}" target="frame">
+                <i class="app-menu__icon fa fa-edit"></i>
+                <span class="app-menu__label">挂号</span>
+            </a>
+        </li>
+
         <li>
             <a class="app-menu__item" th:href="@{/text}" target="frame">
                 <i class="app-menu__icon fa fa-edit"></i>
@@ -147,16 +308,16 @@
             </a>
         </li>
 
-<!--        <li>-->
-<!--            <a class="app-menu__item" href="#" target="_blank">-->
-<!--                <i class="app-menu__icon fa fa-home"></i>-->
-<!--                <span class="app-menu__label">访问前台</span>-->
-<!--            </a>-->
-<!--        </li>-->
+        <!--        <li>-->
+        <!--            <a class="app-menu__item" href="#" target="_blank">-->
+        <!--                <i class="app-menu__icon fa fa-home"></i>-->
+        <!--                <span class="app-menu__label">访问前台</span>-->
+        <!--            </a>-->
+        <!--        </li>-->
     </ul>
 </aside>
 
-<iframe th:src="@{/index1}" name="frame" style="width: 100%; height: 100%;" frameborder="0" scrolling="no">
+<iframe th:src="@{/index1}" name="frame" style="width: 100%; height: 100%;" frameborder="0">
 
 </iframe>
 

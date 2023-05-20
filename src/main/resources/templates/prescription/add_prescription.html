@@ -19,36 +19,46 @@
     <div class="app-title">
         <ul class="app-breadcrumb breadcrumb">
             <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-            <li class="breadcrumb-item"><a href="">添加药品</a></li>
+            <li class="breadcrumb-item"><a href="">添加用户</a></li>
         </ul>
     </div>
     <div class="row">
         <div class="col-md-12">
-            <form id="add-drug">
+            <form id="admin-adduser">
                 <div class="tile">
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label class="control-label" for="name">药品名称</label>
+                                <label class="control-label" for="name">病人姓名</label>
                                 <input class="form-control" type="text" id="name" name="name" value=""
-                                       placeholder="药品名称">
+                                       placeholder="病人姓名">
                             </div>
                             <div class="form-group">
-                                <label class="control-label" for="price">药品价格</label>
-                                <input class="form-control" type="text" id="price" name="price" value=""
-                                       placeholder="药品价格">
+                                <label class="control-label" for="birthday">出生日期</label>
+                                <input class="form-control" type="date" id="birthday" name="birthday" value=""
+                                       placeholder="出生日期">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="address">家庭住址</label>
+                                <input class="form-control" type="text" id="address" name="address" value=""
+                                       placeholder="身份证号">
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label class="control-label" for="specification">药品描述</label>
-                                <input class="form-control" type="text" id="specification" name="specification" value=""
-                                       placeholder="药品描述">
+                                <label class="control-label" for="gender">病人性别</label>
+                                <input class="form-control" type="text" id="gender" name="gender" value=""
+                                       placeholder="病人性别">
                             </div>
                             <div class="form-group">
-                                <label class="control-label" for="stack">库存</label>
-                                <input class="form-control" type="text" id="stack" name="stack" value=""
-                                       placeholder="库存">
+                                <label class="control-label" for="idCard">身份证号</label>
+                                <input class="form-control" type="text" id="idCard" name="idCard" value=""
+                                       placeholder="身份证号">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="telephone">联系方式</label>
+                                <input class="form-control" type="text" id="telephone" name="telephone" value=""
+                                       placeholder="联系方式">
                             </div>
                         </div>
                     </div>
@@ -96,34 +106,28 @@
             height: '238px' //设置容器宽度
             ,
             arrow: 'always' //始终显示箭头
+            //,anim: 'updown' //切换动画方式
         });
     });
 
-    $('#add-drug button').click(function () {
-
-        /*实例化表单数据*/
-        var fields = $('#add-drug').serializeArray();
-
-        var obj = {}; // 声明一个对象
-        $.each(fields, function (index, field) {
-            obj[field.name] = field.value; // 通过变量 将属性值 属性一起放到对象中
-        })
-
+    $('#admin-adduser button').click(function () {
+        fd = new FormData(document.getElementById('admin-adduser'));
         $.ajax({
-            url: '/admin/drug',
+            url: '/admin/adduser',
             type: "POST",
             timeout: "5000",
             dataType: "json",
-            contentType: 'application/json',
-            data: JSON.stringify(obj),
+            contentType: 'application/x-www-form-urlencoded;charset=utf-8',
+            data: fd,
+            contentType: false,
             processData: false,
             success: function (data) {
                 if (data.code == "200") {
-                    layer.msg(data.message, {time: 1500}, function () {
-                        window.location.href = "/drugs";
+                    layer.msg(data.msg, {time: 1500}, function () {
+                        window.location.href = "/<?php echo ADMIN_PATH;?>/userinfo.html";
                     });
                 } else {
-                    layer.msg(data.message);
+                    layer.msg(data.msg);
                 }
             },
             error: function (XMLResponse) {

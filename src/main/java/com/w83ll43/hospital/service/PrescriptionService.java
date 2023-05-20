@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.w83ll43.hospital.model.domain.Prescription;
 import com.w83ll43.hospital.model.param.PrescriptionParam;
 import com.w83ll43.hospital.model.vo.FeeDetail;
+import com.w83ll43.hospital.model.vo.PrescriptionVo;
 
 import java.util.List;
 
@@ -27,4 +28,6 @@ public interface PrescriptionService extends IService<Prescription> {
      * @return
      */
     List<FeeDetail> getPrescriptionFeeDetails(Long billId);
+
+    List<PrescriptionVo> getPrescriptionVos();
 }

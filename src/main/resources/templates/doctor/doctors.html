@@ -97,23 +97,17 @@
             title: "提示",
             btn: ['删除', '取消 '] //按钮
         }, function () {
-            fd = new FormData();
-            fd.append("id", _this.title);
             $.ajax({
-                url: '/admin/delapi',
-                type: "POST",
+                url: '/admin/doctor/'+_this.title,
+                type: "DELETE",
                 timeout: "3000",
-                dataType: "json",
-                contentType: 'application/x-www-form-urlencoded;charset=utf-8',
-                data: fd,
-                contentType: false,
                 processData: false,
                 success: function (data) {
                     if (data.code == "200") {
-                        layer.msg(data.massage);
+                        layer.msg(data.message);
                         tbody.removeChild(tr);
                     } else {
-                        layer.msg(data.massage);
+                        layer.msg(data.message);
                     }
                 },
                 error: function (XMLResponse) {

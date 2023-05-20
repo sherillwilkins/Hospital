@@ -30,47 +30,33 @@
 <main class="app-content">
     <div class="row">
         <div class="col-md-12">
-            <form id="edit-patient">
+            <form id="edit-department">
                 <div class="tile">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <label class="control-label" for="id">病人编号</label>
-                                <input class="form-control" type="text" id="id" name="id" th:value="${patient.id}"
-                                       placeholder="病人编号" disabled="disabled">
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label" for="gender">病人性别</label>
-                                <input class="form-control" type="text" id="gender" name="gender" th:value="${patient.gender}"
-                                       placeholder="病人性别">
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label" for="idCard">身份证号</label>
-                                <input class="form-control" type="text" id="idCard" name="idCard" th:value="${patient.idCard}"
-                                       placeholder="身份证号">
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label" for="telephone">联系方式</label>
-                                <input class="form-control" type="text" id="telephone" name="telephone" th:value="${patient.telephone}"
-                                       placeholder="联系方式">
-                            </div>
+                    <div class="tile-body">
+                        <div class="form-group">
+                            <label class="control-label" for="id">科室编号</label>
+                            <input class="form-control" type="text" id="id" name="id" th:value="${department.id}"
+                                   placeholder="科室编号" disabled="disabled">
                         </div>
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <label class="control-label" for="name">病人姓名</label>
-                                <input class="form-control" type="text" id="name" name="name" th:value="${patient.name}"
-                                       placeholder="病人姓名">
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label" for="birthday">出生日期</label>
-                                <input class="form-control" type="date" id="birthday" name="birthday" th:value="${patient.birthday}"
-                                       placeholder="出生日期">
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label" for="address">家庭住址</label>
-                                <input class="form-control" type="text" id="address" name="address" th:value="${patient.address}"
-                                       placeholder="身份证号">
-                            </div>
+                        <div class="form-group">
+                            <label class="control-label" for="name">科室名称</label>
+                            <input class="form-control" type="text" id="name" name="name" th:value="${department.name}"
+                                   placeholder="科室名称">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="description">科室介绍</label>
+                            <input class="form-control" type="text" id="description" name="description" th:value="${department.description}"
+                                   placeholder="科室介绍">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="sectionId">所属部门</label>
+                            <input class="form-control" type="text" id="sectionId" name="sectionId" th:value="${department.sectionId}"
+                                   placeholder="所属部门">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="telephone">联系方式</label>
+                            <input class="form-control" type="text" id="telephone" name="telephone" th:value="${department.telephone}"
+                                   placeholder="联系方式">
                         </div>
                     </div>
                     <div class="tile-footer">
@@ -101,10 +87,10 @@
 <script th:src="@{/plugins/layui/layui.all.js}"></script>
 
 <script>
-    $('#edit-patient button').click(function () {
+    $('#admin-useredit button').click(function () {
 
         /*实例化表单数据*/
-        var fields = $('#edit-patient').serializeArray();
+        var fields = $('#admin-useredit').serializeArray();
 
         var obj = {}; // 声明一个对象
         $.each(fields, function (index, field) {
@@ -112,12 +98,12 @@
         })
 
         $.ajax({
-            url: '/admin/patient',
+            url: '/admin/department',
             type: "PUT",
             timeout: "5000",
             dataType: "json",
             contentType: 'application/json',
-            data: JSON.stringify(obj)
+            data: JSON.stringify(obj),
             processData: false,
             success: function (data) {
                 if (data.code == "200") {

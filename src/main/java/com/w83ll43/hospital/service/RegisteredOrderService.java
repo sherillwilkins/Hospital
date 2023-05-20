@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.w83ll43.hospital.model.domain.RegisteredOrder;
 import com.w83ll43.hospital.model.param.RegisteredOrderParam;
 import com.w83ll43.hospital.model.vo.FeeDetail;
+import com.w83ll43.hospital.model.vo.Registration;
 
 import java.util.List;
 
@@ -28,4 +29,6 @@ public interface RegisteredOrderService extends IService<RegisteredOrder> {
      * @return
      */
     List<FeeDetail> getRegistrationFeeDetails(Long billId);
+
+    List<Registration> getRegistrations();
 }

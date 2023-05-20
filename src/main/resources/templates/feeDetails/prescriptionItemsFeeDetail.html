@@ -20,7 +20,7 @@
     <div class="app-title">
         <ul class="app-breadcrumb breadcrumb side">
             <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-            <li class="breadcrumb-item">药品列表</li>
+            <li class="breadcrumb-item">处方缴费单费用明细</li>
         </ul>
     </div>
     <div class="row">
@@ -30,27 +30,18 @@
                     <table class="table table-hover table-bordered" id="sampleTable">
                         <thead class="table-space">
                         <tr>
-                            <th>编号</th>
-                            <th>名称</th>
-                            <th>描述</th>
-                            <th>价格</th>
-                            <th>库存</th>
-                            <th>操作</th>
+                            <th>项目名称</th>
+                            <th>项目类型</th>
+                            <th>项目金额</th>
+                            <th>收费时间</th>
                         </tr>
                         </thead>
                         <tbody class="table-space">
-                        <tr th:each="drug : ${drugs}">
-                            <td th:text="${drug.id}"></td>
-                            <td th:text="${drug.name}"></td>
-                            <td th:text="${drug.specification}"></td>
-                            <td th:text="${drug.price}"></td>
-                            <td th:text="${drug.stack}"></td>
-                            <td class="api-list-cz">
-                                <a class="btn btn-primary btn-sm" onclick="editRow(this)"
-                                   th:title="${drug.id}">编辑</a>
-                                <a class="btn btn-primary btn-sm" onclick="delRow(this)"
-                                   th:title="${drug.id}">删除</a>
-                            </td>
+                        <tr th:each="feeDetail : ${feeDetails}">
+                            <td th:text="${feeDetail.name}"></td>
+                            <td th:text="${feeDetail.type}"></td>
+                            <td th:text="${feeDetail.price}"></td>
+                            <td th:text="${feeDetail.date}"></td>
                         </tr>
                         </tbody>
                     </table>
@@ -82,18 +73,6 @@
 <script th:src="@{/plugins/layui/layui.all.js}"></script>
 
 <script type="text/javascript">
-    function editRow(_this) {
-        layer.open({
-            type: 2,
-            title: '接口编辑',
-            shadeClose: false,
-            shade: true,
-            maxmin: false, //开启最大化最小化按钮
-            area: ['85%', '80%'],
-            offset: "r",
-            content: ['/edit_drug/' + _this.title]
-        });
-    }
 
     //删除
     function delRow(_this) {
@@ -105,19 +84,23 @@
             title: "提示",
             btn: ['删除', '取消 '] //按钮
         }, function () {
+            fd = new FormData();
+            fd.append("id", _this.title);
             $.ajax({
-                url: '/admin/drug/' + _this.title,
-                type: "DELETE",
+                url: '/admin/deluser',
+                type: "POST",
                 timeout: "3000",
                 dataType: "json",
-                contentType: 'application/json',
+                contentType: 'application/x-www-form-urlencoded;charset=utf-8',
+                data: fd,
+                contentType: false,
                 processData: false,
                 success: function (data) {
                     if (data.code == "200") {
-                        layer.msg(data.message);
+                        layer.msg(data.msg);
                         tbody.removeChild(tr);
                     } else {
-                        layer.msg(data.message);
+                        layer.msg(data.msg);
                     }
                 },
                 error: function (XMLResponse) {

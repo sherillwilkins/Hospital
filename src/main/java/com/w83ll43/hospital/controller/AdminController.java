@@ -93,7 +93,7 @@ public class AdminController {
         long doctorId = IdWorker.getId(doctor);
         doctor.setId(doctorId);
         doctorService.save(doctor);
-        return Result.success(doctor);
+        return Result.success("添加医生成功！", doctor);
     }
 
     /**
@@ -150,8 +150,9 @@ public class AdminController {
      * @return
      */
     @PutMapping("/doctor")
-    public Result<Doctor> updateDoctor(@RequestBody Doctor doctor) {
-        return null;
+    public Result updateDoctor(@RequestBody Doctor doctor) {
+        boolean result = doctorService.updateById(doctor);
+        return result ? Result.success("更新医生成功！") : Result.error("更新医生失败！");
     }
 
     /**
@@ -163,6 +164,17 @@ public class AdminController {
     public Result<String> deleteDoctorByIds(@RequestParam List<Long> ids) {
         boolean result = doctorService.removeByIds(ids);
         return result ? Result.success("批量删除医生成功！") : Result.error("批量删除医生失败！");
+    }
+
+    /**
+     * 根据 ID 删除医生信息
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/doctor/{id}")
+    public Result deleteDoctorById(@PathVariable("id") Long id) {
+        boolean result = doctorService.removeById(id);
+        return result ? Result.success("删除医生成功！") : Result.error("删除医生失败！");
     }
 
     /**
@@ -348,7 +360,7 @@ public class AdminController {
         long id = IdWorker.getId(drug);
         drug.setId(id);
         drugService.save(drug);
-        return Result.success(drug);
+        return Result.success("添加药品成功！", drug);
     }
 
     /**
@@ -420,5 +432,16 @@ public class AdminController {
     public Result<String> deleteDrugById(@RequestParam List<Long> ids) {
         boolean result = drugService.removeByIds(ids);
         return result ? Result.success("批量删除药品成功！") : Result.error("批量删除药品失败！");
+    }
+
+    /**
+     * 根据 ID 批量删除药品
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/drug/{id}")
+    public Result deleteDrugById(@PathVariable("id") Long id) {
+        boolean result = drugService.removeById(id);
+        return result ? Result.success("删除药品成功！") : Result.error("删除药品失败！");
     }
 }

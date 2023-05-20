@@ -7,10 +7,9 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
-public class Registration implements Serializable {
-
+public class PrescriptionVo implements Serializable {
     /**
-     * 挂号单编号
+     * 处方编号
      */
     private Long id;
 
@@ -20,19 +19,24 @@ public class Registration implements Serializable {
     private String patientName;
 
     /**
-     * 挂号科室
-     */
-    private String departmentName;
-
-    /**
-     * 挂号医生
+     * 医生姓名
      */
     private String doctorName;
 
     /**
-     * 挂号时间
+     * 症状描述
+     */
+    private String symptom;
+
+    /**
+     * 开具日期
      */
     private Date date;
+
+    /**
+     * 是否住院
+     */
+    private Integer hospitalized;
 
     /**
      * 缴费金额
@@ -43,4 +47,10 @@ public class Registration implements Serializable {
      * 缴费状态
      */
     private Integer status;
+
+    /**
+     * 缴费单编号
+     */
+    private Long billId;
+
 }

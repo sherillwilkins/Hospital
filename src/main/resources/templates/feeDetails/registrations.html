@@ -20,7 +20,7 @@
     <div class="app-title">
         <ul class="app-breadcrumb breadcrumb side">
             <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-            <li class="breadcrumb-item">会员列表</li>
+            <li class="breadcrumb-item">挂号单</li>
         </ul>
     </div>
     <div class="row">
@@ -41,16 +41,17 @@
                         </tr>
                         </thead>
                         <tbody class="table-space">
-                        <tr th:each="user : ${users}">
-                            <td th:text="${user.id}"></td>
-                            <td th:text="${user.username}"></td>
-                            <td th:text="${user.role}"></td>
-                            <td th:text="${user.createTime}"></td>
+                        <tr th:each="registration : ${registrations}">
+                            <td th:text="${registration.id}"></td>
+                            <td th:text="${registration.patientName}"></td>
+                            <td th:text="${registration.departmentName}"></td>
+                            <td th:text="${registration.doctorName}"></td>
+                            <td th:text="${registration.date}"></td>
+                            <td th:text="${registration.amount}"></td>
+                            <td th:text="${registration.status}"></td>
                             <td class="api-list-cz">
-                                <a class="btn btn-primary btn-sm" onclick="editRow(this)"
-                                   th:title="${user.id}">编辑</a>
                                 <a class="btn btn-primary btn-sm" onclick="delRow(this)"
-                                   th:title="${user.id}">去支付</a>
+                                   th:title="${registration.id}">去支付</a>
                             </td>
                         </tr>
                         </tbody>
@@ -83,18 +84,6 @@
 <script th:src="@{/plugins/layui/layui.all.js}"></script>
 
 <script type="text/javascript">
-    function editRow(_this) {
-        layer.open({
-            type: 2,
-            title: '接口编辑',
-            shadeClose: false,
-            shade: true,
-            maxmin: false, //开启最大化最小化按钮
-            area: ['85%', '80%'],
-            offset: "r",
-            content: ['/edit_user/' + _this.title]
-        });
-    }
 
     //删除
     function delRow(_this) {
