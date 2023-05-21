@@ -21,7 +21,41 @@
         <ul class="app-breadcrumb breadcrumb side">
             <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
             <li class="breadcrumb-item">值班列表</li>
+            <li class="breadcrumb-item">
+                <a class="btn btn-primary btn-sm" onclick="addRow(this)">安排值班</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a class="btn btn-primary btn-sm" onclick="getSchedule(this)" th:title="${session.user}">今日安排</a>
+            </li>
         </ul>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="search-wraper" role="search">
+                <div class="form-group">
+                    <select class="form-control col-lg-12" name="search-type" id="search-type">
+                        <option>--筛选类型--</option>
+                        <option value="doctor">医生</option>
+                        <option value="department">科室</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="search-wraper" role="search">
+                <div class="form-group">
+                    <input class="form-control search clearable" id="search-text" placeholder="搜索编号，如医生编号、部门编号"
+                           spellcheck="false" tabindex="0"/>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1">
+            <div class="search-wraper">
+                <div class="form-group">
+                    <a class="btn btn-primary btn-large" onclick="doSearch(this)">搜索</a>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="row">
         <div class="col-md-12">
@@ -30,28 +64,25 @@
                     <table class="table table-hover table-bordered" id="sampleTable">
                         <thead class="table-space">
                         <tr>
-                            <th>编号</th>
+                            <th>值班编号</th>
                             <th>医生</th>
+                            <th>值班科室</th>
                             <th>地点</th>
                             <th>开始时间</th>
                             <th>结束时间</th>
                             <th>类型</th>
-                            <th>操作</th>
                         </tr>
                         </thead>
                         <tbody class="table-space">
                         <tr th:each="schedule : ${schedules}">
                             <td th:text="${schedule.id}"></td>
-                            <td th:text="${schedule.name}"></td>
-                            <td th:text="${schedule.description}"></td>
-                            <td th:text="${schedule.section_id}"></td>
-                            <td th:text="${schedule.telephone}"></td>
-                            <td class="api-list-cz">
-                                <a class="btn btn-primary btn-sm" onclick="editRow(this)"
-                                   th:title="${schedule.id}">编辑</a>
-                                <a class="btn btn-primary btn-sm" onclick="delRow(this)"
-                                   th:title="${schedule.id}">删除</a>
-                            </td>
+                            <td th:text="${schedule.doctorId}"></td>
+                            <td th:text="${schedule.departmentId}"></td>
+                            <td th:text="${schedule.place}"></td>
+                            <td th:text="${#dates.format(schedule.startTime, 'yyyy-MM-dd HH-mm-ss')}"></td>
+                            <td th:text="${#dates.format(schedule.endTime, 'yyyy-MM-dd HH-mm-ss')}"></td>
+                            <td th:if="${schedule.type} == 1">坐诊</td>
+                            <td th:if="${schedule.type} == 2">巡诊</td>
                         </tr>
                         </tbody>
                     </table>
@@ -83,7 +114,7 @@
 <script th:src="@{/plugins/layui/layui.all.js}"></script>
 
 <script type="text/javascript">
-    function editRow(_this) {
+    function addRow(_this) {
         layer.open({
             type: 2,
             title: '接口编辑',
@@ -92,46 +123,20 @@
             maxmin: false, //开启最大化最小化按钮
             area: ['85%', '80%'],
             offset: "r",
-            content: ['/edit_user/' + _this.title]
+            content: ['/add_schedule']
         });
     }
 
-    //删除
-    function delRow(_this) {
-        var td = _this.parentNode;
-        var tr = td.parentNode;
-        var tbody = tr.parentNode;
-        //询问框
-        layer.confirm('确定删除接口？', {
-            title: "提示",
-            btn: ['删除', '取消 '] //按钮
-        }, function () {
-            fd = new FormData();
-            fd.append("id", _this.title);
-            $.ajax({
-                url: '/admin/deluser',
-                type: "POST",
-                timeout: "3000",
-                dataType: "json",
-                contentType: 'application/x-www-form-urlencoded;charset=utf-8',
-                data: fd,
-                contentType: false,
-                processData: false,
-                success: function (data) {
-                    if (data.code == "200") {
-                        layer.msg(data.msg);
-                        tbody.removeChild(tr);
-                    } else {
-                        layer.msg(data.msg);
-                    }
-                },
-                error: function (XMLResponse) {
-                    layer.msg(XMLResponse.error);
-                }
-            });
-        });
+    function getSchedule(_this) {
+        window.location.href = '/schedules/' + _this.title;
     }
 
+    function doSearch(_this) {
+        var type = $("#search-type").val();
+        var text = $("#search-text").val();
+        console.log(type, text);
+        window.location.href = '/schedules/' + type + '/' + text;
+    }
 </script>
 
 </body>

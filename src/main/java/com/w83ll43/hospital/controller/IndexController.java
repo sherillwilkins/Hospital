@@ -26,7 +26,7 @@ public class IndexController {
     private PatientService patientService;
 
     @Resource
-    private DoctorController doctorController;
+    private DoctorService doctorService;
 
     @Resource
     private AdminController adminController;
@@ -48,6 +48,9 @@ public class IndexController {
 
     @Resource
     private BillService billService;
+
+    @Resource
+    private ScheduleService scheduleService;
 
     @Resource
     private HospitalizationFileService hospitalizationFileService;
@@ -384,4 +387,42 @@ public class IndexController {
         model.addAttribute("patients", patients);
         return "doctor/add_prescription";
     }
+
+    @GetMapping("/schedules")
+    public String schedules(Model model) {
+        List<Schedule> schedules = scheduleService.list();
+        model.addAttribute("schedules", schedules);
+        return "schedule/schedules";
+    }
+
+    @GetMapping("/add_schedule")
+    public String addSchedule(Model model) {
+        List<Doctor> doctors = doctorService.list();
+        List<Department> departments = departmentService.list();
+        model.addAttribute("doctors", doctors);
+        model.addAttribute("departments", departments);
+        return "schedule/add_schedule";
+    }
+
+    @GetMapping("/schedules/{id}")
+    public String schedules(@PathVariable("id") Long id, Model model) {
+        List<Schedule> schedules = scheduleService.getTodaySchedule(id);
+        model.addAttribute("schedules", schedules);
+        return "schedule/schedules";
+    }
+
+    @GetMapping("/schedules/doctor/{id}")
+    public String schedulesByDoctorId(@PathVariable("id") Long id, Model model) {
+        List<Schedule> schedules = scheduleService.getScheduleByDoctorId(id);
+        model.addAttribute("schedules", schedules);
+        return "schedule/schedules";
+    }
+
+    @GetMapping("/schedules/department/{id}")
+    public String schedulesByDepartmentById(@PathVariable("id") Long id, Model model) {
+        List<Schedule> schedules = scheduleService.getScheduleByDepartmentId(id);
+        model.addAttribute("schedules", schedules);
+        return "schedule/schedules";
+    }
+
 }

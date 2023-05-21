@@ -32,6 +32,11 @@ public class Schedule implements Serializable {
     private String place;
 
     /**
+     * 值班科室
+     */
+    private Long departmentId;
+
+    /**
      * 值班开始时间
      */
     private Date startTime;
