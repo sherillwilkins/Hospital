@@ -30,4 +30,11 @@ public interface PrescriptionService extends IService<Prescription> {
     List<FeeDetail> getPrescriptionFeeDetails(Long billId);
 
     List<PrescriptionVo> getPrescriptionVos();
+
+    /**
+     * 根据处方单编号缴费
+     * @param id
+     * @return
+     */
+    Boolean payWithPrescription(Long id);
 }

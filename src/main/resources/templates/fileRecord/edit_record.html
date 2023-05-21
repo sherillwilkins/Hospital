@@ -16,8 +16,6 @@
     <style>
         .app-content {
             margin: auto;
-            /*margin-left: 0px;*/
-            /*margin-top: 0px !important;*/
         }
 
         .app-content {
@@ -30,38 +28,55 @@
 <main class="app-content">
     <div class="row">
         <div class="col-md-12">
-            <form id="admin-useredit">
-                <div class="tile">
-                    <div class="tile-body">
-                        <div class="form-group">
-                            <label class="control-label" for="id">住院记录编号</label>
-                            <input class="form-control" type="text" id="id" name="id" th:value="${record.id}"
-                                   placeholder="住院记录编号" disabled="disabled">
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="fileId">住院档案编号</label>
-                            <input class="form-control" type="text" id="fileId" name="fileId" th:value="${record.fileId}"
-                                   placeholder="住院档案编号" disabled="disabled">
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="symptom">病人症状</label>
-                            <input class="form-control" type="text" id="symptom" name="symptom" th:value="${record.symptom}"
-                                   placeholder="病人症状">
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="treatment">治疗方案</label>
-                            <input class="form-control" type="data" id="treatment" name="treatment" th:value="${record.treatment}"
-                                   placeholder="治疗方案">
-                        </div>
-                    </div>
-                    <div class="tile-footer">
-                        <button class="btn btn-primary" name="submit" type="submit">
-                            <i class="fa fa-fw fa-lg fa-check-circle"></i>保存
-                        </button>
-                        <span style="color:#e60c0c"></span>
+            <div class="layui-tab layui-tab-card">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">医生信息</li>
+                </ul>
+                <div class="layui-tab-content" style="height: 100px;">
+                    <div class="layui-tab-item layui-show">
+                        <form id="edit-record">
+                            <div class="tile">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <label class="control-label" for="id">住院记录编号</label>
+                                            <input type="hidden" id="id" name="id" th:value="${record.id}">
+                                            <input class="form-control" type="text" th:value="${record.id}"
+                                                   disabled="disabled">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label" for="fileId">住院档案编号</label>
+                                            <select id="fileId" name="fileId" class="col-lg-12 form-control"
+                                                    th:value="${record.fileId}">
+                                                <option value="">--全部--</option>
+                                                <option th:each="file : ${files}" th:text="${file.id}"
+                                                        th:value="${file.id}"></option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label" for="symptom">病人症状</label>
+                                            <input class="form-control" type="text" id="symptom" name="symptom"
+                                                   th:value="${record.symptom}"
+                                                   placeholder="病人症状">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label" for="treatment">治疗方案</label>
+                                            <input class="form-control" type="data" id="treatment" name="treatment"
+                                                   th:value="${record.treatment}"
+                                                   placeholder="治疗方案">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tile-footer">
+                                    <button type="button" class="btn btn-primary">
+                                        <i class="fa fa-fw fa-lg fa-check-circle"></i>保存
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </main>
@@ -82,24 +97,31 @@
 <script th:src="@{/plugins/layui/layui.all.js}"></script>
 
 <script>
-    $('#admin-useredit button').click(function () {
-        fd = new FormData(document.getElementById('admin-useredit'));
+    $('#edit-record button').click(function () {
+
+        /*实例化表单数据*/
+        var fields = $('#edit-record').serializeArray();
+
+        var obj = {}; // 声明一个对象
+        $.each(fields, function (index, field) {
+            obj[field.name] = field.value; // 通过变量 将属性值 属性一起放到对象中
+        })
+
         $.ajax({
-            url: '/admin/useredit',
-            type: "POST",
+            url: '/record',
+            type: "PUT",
             timeout: "5000",
             dataType: "json",
-            contentType: 'application/x-www-form-urlencoded;charset=utf-8',
-            data: fd,
-            contentType: false,
+            contentType: 'application/json',
+            data: JSON.stringify(obj),
             processData: false,
             success: function (data) {
                 if (data.code == "200") {
-                    layer.msg(data.msg, {time: 1500}, function () {
-                        window.parent.location.reload();//刷新父页面
+                    layer.msg(data.message, {time: 1500}, function () {
+                        window.parent.location.reload(); // 刷新父页面
                     });
                 } else {
-                    layer.msg(data.msg);
+                    layer.msg(data.message);
                 }
             },
             error: function (XMLResponse) {

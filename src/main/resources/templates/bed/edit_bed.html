@@ -30,39 +30,48 @@
 <main class="app-content">
     <div class="row">
         <div class="col-md-12">
-            <form id="admin-useredit">
-                <div class="tile">
-                    <div class="tile-body">
-                        <div class="form-group">
-                            <label class="control-label" for="wardId">病房号</label>
-                            <input class="form-control" type="text" id="wardId" name="wardId" th:value="${bed.wardId}"
-                                   placeholder="病房号" disabled="disabled">
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="bedId">床位号</label>
-                            <input class="form-control" type="text" id="bedId" name="bedId" th:value="待完善"
-                                   placeholder="床位号">
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="charge">床位费</label>
-                            <input class="form-control" type="text" id="charge" name="charge" th:value="${bed.charge}"
-                                   placeholder="床位费">
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="status">病床状态</label>
-                            <input class="form-control" type="text" id="status" name="status" th:value="待完善"
-                                   placeholder="病床状态">
-                        </div>
-                        
-                    </div>
-                    <div class="tile-footer">
-                        <button class="btn btn-primary" name="submit" type="submit">
-                            <i class="fa fa-fw fa-lg fa-check-circle"></i>保存
-                        </button>
-                        <span style="color:#e60c0c"></span>
+            <div class="layui-tab layui-tab-card">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">病床信息</li>
+                </ul>
+                <div class="layui-tab-content" style="height: 100px;">
+                    <div class="layui-tab-item layui-show">
+                        <form id="edit-bed">
+                            <div class="tile">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <label class="control-label" for="wardId">病房号</label>
+                                            <input type="hidden" id="id" name="id" th:value="${bed.id}">
+                                            <input class="form-control" id="wardId" type="text" th:value="${bed.wardId}" disabled="disabled">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label" for="bedId">床位号</label>
+                                            <input class="form-control" type="text" id="bedId" name="bedId" th:value="待完善"
+                                                   placeholder="床位号">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label" for="charge">床位费</label>
+                                            <input class="form-control" type="text" id="charge" name="charge" th:value="${bed.charge}"
+                                                   placeholder="床位费">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label" for="status">病床状态</label>
+                                            <input class="form-control" type="text" id="status" name="status" th:value="待完善"
+                                                   placeholder="病床状态">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tile-footer">
+                                    <button type="button" class="btn btn-primary">
+                                        <i class="fa fa-fw fa-lg fa-check-circle"></i>保存
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </main>
@@ -83,24 +92,31 @@
 <script th:src="@{/plugins/layui/layui.all.js}"></script>
 
 <script>
-    $('#admin-useredit button').click(function () {
-        fd = new FormData(document.getElementById('admin-useredit'));
+    $('#edit-bed button').click(function () {
+
+        /*实例化表单数据*/
+        var fields = $('#edit-bed').serializeArray();
+
+        var obj = {}; // 声明一个对象
+        $.each(fields, function (index, field) {
+            obj[field.name] = field.value; // 通过变量 将属性值 属性一起放到对象中
+        })
+
         $.ajax({
-            url: '/admin/useredit',
-            type: "POST",
+            url: '/bed',
+            type: "PUT",
             timeout: "5000",
             dataType: "json",
-            contentType: 'application/x-www-form-urlencoded;charset=utf-8',
-            data: fd,
-            contentType: false,
+            contentType: 'application/json',
+            data: JSON.stringify(obj),
             processData: false,
             success: function (data) {
                 if (data.code == "200") {
-                    layer.msg(data.msg, {time: 1500}, function () {
-                        window.parent.location.reload();//刷新父页面
+                    layer.msg(data.message, {time: 1500}, function () {
+                        window.parent.location.reload(); // 刷新父页面
                     });
                 } else {
-                    layer.msg(data.msg);
+                    layer.msg(data.message);
                 }
             },
             error: function (XMLResponse) {

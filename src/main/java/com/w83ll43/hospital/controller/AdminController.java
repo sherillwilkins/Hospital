@@ -191,7 +191,7 @@ public class AdminController {
         // 2、保存至数据库
         sectionService.save(section);
 
-        return Result.success(section);
+        return Result.success("新增部门成功！",section);
     }
 
     /**
@@ -218,7 +218,7 @@ public class AdminController {
     @PutMapping("/section")
     public Result<Section> updateSectionById(@RequestBody Section section) {
         boolean result = sectionService.updateById(section);
-        return result ? Result.success(section) : Result.error("更新部门失败！");
+        return result ? Result.success("更新部门信息成功！", section) : Result.error("更新部门信息失败！");
     }
 
     /**
@@ -267,6 +267,18 @@ public class AdminController {
     }
 
     /**
+     * 根据 ID 删除部门信息
+     * 使用集合接收参数需要使用 @RequestParam 注解
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/section/{id}")
+    public Result deleteSectionById(@PathVariable("id") Long id) {
+        boolean result = sectionService.removeById(id);
+        return result ? Result.success("删除部门成功！") : Result.error("删除部门失败！");
+    }
+
+    /**
      * 添加科室
      * @param department
      * @return
@@ -276,7 +288,7 @@ public class AdminController {
         long id = IdWorker.getId(department);
         department.setId(id);
         departmentService.save(department);
-        return Result.success(department);
+        return Result.success("新增科室成功！", department);
     }
 
     /**
@@ -303,7 +315,7 @@ public class AdminController {
     @PutMapping("/department")
     public Result<Department> updateDepartmentById(@RequestBody Department department) {
         boolean result = departmentService.updateById(department);
-        return result ? Result.success(department) : Result.error("修改科室信息失败");
+        return result ? Result.success("更新科室信息成功！", department) : Result.error("修改科室信息失败");
     }
 
     /**
@@ -373,7 +385,7 @@ public class AdminController {
         Drug drug = drugService.getById(id);
 
         if (drug == null) {
-            return Result.error("部门不存在！");
+            return Result.error("药品不存在！");
         }
 
         return Result.success(drug);
@@ -387,7 +399,7 @@ public class AdminController {
     @PutMapping("/drug")
     public Result<Drug> updateDrugById(@RequestBody Drug drug) {
         boolean result = drugService.updateById(drug);
-        return result ? Result.success(drug) : Result.error("修改药品信息失败");
+        return result ? Result.success("更新药品信息成功！", drug) : Result.error("更新药品信息失败！");
     }
 
     /**
@@ -435,7 +447,7 @@ public class AdminController {
     }
 
     /**
-     * 根据 ID 批量删除药品
+     * 根据 ID 删除药品
      * @param id
      * @return
      */

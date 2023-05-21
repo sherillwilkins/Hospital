@@ -20,7 +20,7 @@
     <div class="app-title">
         <ul class="app-breadcrumb breadcrumb side">
             <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-            <li class="breadcrumb-item">处方缴费单费用明细</li>
+            <li class="breadcrumb-item">值班列表</li>
         </ul>
     </div>
     <div class="row">
@@ -30,18 +30,28 @@
                     <table class="table table-hover table-bordered" id="sampleTable">
                         <thead class="table-space">
                         <tr>
-                            <th>项目名称</th>
-                            <th>项目类型</th>
-                            <th>项目金额</th>
-                            <th>收费时间</th>
+                            <th>编号</th>
+                            <th>医生</th>
+                            <th>地点</th>
+                            <th>开始时间</th>
+                            <th>结束时间</th>
+                            <th>类型</th>
+                            <th>操作</th>
                         </tr>
                         </thead>
                         <tbody class="table-space">
-                        <tr th:each="feeDetail : ${feeDetails}">
-                            <td th:text="${feeDetail.name}"></td>
-                            <td th:text="${feeDetail.type}"></td>
-                            <td th:text="${feeDetail.price}"></td>
-                            <td th:text="${#dates.format(feeDetail.date, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                        <tr th:each="schedule : ${schedules}">
+                            <td th:text="${schedule.id}"></td>
+                            <td th:text="${schedule.name}"></td>
+                            <td th:text="${schedule.description}"></td>
+                            <td th:text="${schedule.section_id}"></td>
+                            <td th:text="${schedule.telephone}"></td>
+                            <td class="api-list-cz">
+                                <a class="btn btn-primary btn-sm" onclick="editRow(this)"
+                                   th:title="${schedule.id}">编辑</a>
+                                <a class="btn btn-primary btn-sm" onclick="delRow(this)"
+                                   th:title="${schedule.id}">删除</a>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
@@ -73,6 +83,18 @@
 <script th:src="@{/plugins/layui/layui.all.js}"></script>
 
 <script type="text/javascript">
+    function editRow(_this) {
+        layer.open({
+            type: 2,
+            title: '接口编辑',
+            shadeClose: false,
+            shade: true,
+            maxmin: false, //开启最大化最小化按钮
+            area: ['85%', '80%'],
+            offset: "r",
+            content: ['/edit_user/' + _this.title]
+        });
+    }
 
     //删除
     function delRow(_this) {

@@ -31,4 +31,11 @@ public interface RegisteredOrderService extends IService<RegisteredOrder> {
     List<FeeDetail> getRegistrationFeeDetails(Long billId);
 
     List<Registration> getRegistrations();
+
+    /**
+     * 根据挂号单编号缴费
+     * @param id
+     * @return
+     */
+    Boolean payBillWithRegistration(Long id);
 }

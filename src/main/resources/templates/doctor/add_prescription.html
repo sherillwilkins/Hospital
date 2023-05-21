@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="">
+<head>
+    <title>管理员</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Layui CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/layui/css/layui.css}">
+    <!-- Main CSS-->
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/awesome/css/main.css}">
+    <!-- 自定义 -->
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/awesome/css/patch.css}">
+    <!-- Font-icon css-->
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/awesome/css/font-awesome.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/font_1332398_z4m8t7izbwk.css}">
+</head>
+<body>
+<main class="app-content">
+    <div class="app-title">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="">开具处方</a></li>
+        </ul>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <form id="add-prescription">
+                <div class="tile">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label" for="patientId">病人姓名</label>
+                                <select id="patientId" name="patientId" class="col-lg-12 form-control">
+                                    <option value="">--全部--</option>
+                                    <option th:each="patient : ${patients}" th:text="${patient.name}" th:value="${patient.id}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label" for="hospitalized">是否住院</label>
+                                <select id="hospitalized" name="hospitalized" class="col-lg-12 form-control">
+                                    <option value="">--全部--</option>
+                                    <option value="0">否</option>
+                                    <option value="1">是</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="control-label" for="symptom">症状描述</label>
+                                <input class="form-control" type="text" id="symptom" name="symptom" value=""
+                                       placeholder="症状描述">
+                            </div>
+                            <table class="table table-hover table-bordered" id="drug-table">
+                                <thead class="table-space" id="drug-thead">
+                                <tr>
+                                    <th>药品名称</th>
+                                    <th>药品份量</th>
+                                    <th>服用次数</th>
+                                    <th>服用数量</th>
+                                    <th>服用单位</th>
+                                    <th>服用方式</th>
+                                    <th>使用时长</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody class="table-space" id="drug-tbody">
+                                <tr name="prescriptionDrugParamList" id="clo">
+                                    <td id="1">
+                                        <select id="drugId" name="drugId" class="col-lg-12 form-control">
+                                            <option value="">全部</option>
+                                            <option th:each="drug : ${drugs}" th:text="${drug.name}" th:value="${drug.id}"></option>
+                                        </select>
+                                    </td>
+                                    <td id="2">
+                                        <input class="form-control" type="text" id="dosage" name="dosage" value=""
+                                               placeholder="药品份量">
+                                    </td>
+                                    <td id="3">
+                                        <input class="form-control" type="text" id="frequency" name="frequency" value=""
+                                               placeholder="服用次数">
+                                    </td>
+                                    <td>
+                                        <input class="form-control" type="text" id="usageNum" name="usageNum" value=""
+                                               placeholder="服用数量">
+                                    </td>
+                                    <td>
+                                        <input class="form-control" type="text" id="usageUnit" name="usageUnit" value=""
+                                               placeholder="服用单位">
+                                    </td>
+                                    <td>
+                                        <input class="form-control" type="text" id="usageMethod" name="usageMethod" value=""
+                                               placeholder="服用方式">
+                                    </td>
+                                    <td>
+                                        <input class="form-control" type="text" id="duration" name="duration" value=""
+                                               placeholder="使用时长">
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-primary btn-sm" onclick="delRow(this)">删除</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tile-footer">
+                        <button class="btn btn-primary" type="button" onclick="addRow(this)">
+                            <i class="fa fa-fw fa-lg fa-check-circle"></i>新增药品项
+                        </button>
+                        <button class="btn btn-primary" type="button" id="submit-prescription">
+                            <i class="fa fa-fw fa-lg fa-check-circle"></i>添加
+                        </button>
+                        <span style="color:#e60c0c"></span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tile" style="margin-bottom: 0px;">
+                <div class="tile-body"> 2017 - 2019 Zero-Art All Rights Reserved</div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Essential javascripts for application to work-->
+<script th:src="@{/plugins/awesome/js/jquery-3.2.1.min.js}"></script>
+<script th:src="@{/plugins/awesome/js/popper.min.js}"></script>
+<script th:src="@{/plugins/awesome/js/bootstrap.min.js}"></script>
+<script th:src="@{/plugins/awesome/js/main.js}"></script>
+<!-- The javascript plugin to display page loading on top-->
+<script th:src="@{/plugins/awesome/js/plugins/pace.min.js}"></script>
+<!-- Page specific javascripts-->
+<script th:src="@{/plugins/awesome/js/plugins/chart.js}"></script>
+<!-- Data table plugin-->
+<script type="text/javascript" th:src="@{/plugins/awesome/js/plugins/jquery.dataTables.min.js}"></script>
+<script type="text/javascript" th:src="@{/plugins/awesome/js/plugins/dataTables.bootstrap.min.js}"></script>
+<script th:src="@{/plugins/layui/layui.all.js}"></script>
+
+<script>
+    layui.use('carousel', function () {
+        var carousel = layui.carousel;
+        //建造实例
+        carousel.render({
+            elem: '#test-carousel-normal',
+            width: '100%' //设置容器宽度
+            ,
+            height: '238px' //设置容器宽度
+            ,
+            arrow: 'always' //始终显示箭头
+        });
+    });
+
+    function delRow(_this) {
+        var td = _this.parentNode;
+        var tr = td.parentNode;
+        var tbody = tr.parentNode;
+        tbody.removeChild(tr);
+    }
+
+    function addRow(_this) {
+        var $td = $("#clo").clone();       // 增加一行 克隆第一个对象
+        $("#drug-table").append($td);
+        $("table tr:last").find(":input").val('');   // 将尾行元素克隆来的保存的值清空
+    }
+
+    $('#add-prescription #submit-prescription').click(function () {
+
+        var obj = {}; // 声明一个对象
+        obj['patientId'] = $('#patientId').val();
+        obj['hospitalized'] = $('#hospitalized').val();
+        obj['symptom'] = $('#symptom').val();
+
+        var prescriptionDrugParamList = [];
+        var drug = {};
+        var i = 0;
+        $('#drug-tbody t' +
+            'd').each(function (index, filed) {
+            if (i <= 6) {
+                drug[filed.firstElementChild.name] = filed.firstElementChild.value
+                i++;
+            } else {
+                i = 0
+                prescriptionDrugParamList.push(drug)
+                drug = {}
+            }
+        });
+
+        obj['prescriptionDrugParamList'] = prescriptionDrugParamList;
+
+        $.ajax({
+            url: '/doctor/prescription',
+            type: "POST",
+            timeout: "5000",
+            dataType: "json",
+            contentType: 'application/json',
+            data: JSON.stringify(obj),
+            processData: false,
+            success: function (data) {
+                if (data.code == "200") {
+                    layer.msg("开具处方成功！请联系病人缴费", {time: 1500}, function () {
+                        window.location.reload();
+                    });
+                } else {
+                    layer.msg(data.message);
+                }
+            },
+            error: function (XMLResponse) {
+                layer.msg(XMLResponse.error);
+            }
+        });
+    });
+</script>
+</body>
+</html>

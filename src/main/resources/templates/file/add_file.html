@@ -24,33 +24,39 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <form id="admin-adduser">
+            <form id="add-file">
                 <div class="tile">
                     <div class="tile-body">
                         <div class="form-group">
                             <label class="control-label" for="patientId">病人编号</label>
-                            <input class="form-control" type="text" id="patientId" name="patientId" value=""
-                             placeholder="病人编号">
+                            <select id="patientId" name="patientId" class="col-lg-12 form-control">
+                                <option value="">--全部--</option>
+                                <option th:each="patient : ${patients}" th:text="${patient.name}" th:value="${patient.id}"></option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label class="control-label" for="admissionTime">入院时间</label>
-                            <input class="form-control" type="data" id="admissionTime" name="admissionTime" value=""
+                            <input class="form-control" type="date" id="admissionTime" name="admissionTime" value=""
                             placeholder="入院时间">
                         </div>
                         <div class="form-group">
                             <label class="control-label" for="dischargeTime">出院时间</label>
-                            <input class="form-control" type="data" id="dischargeTime" name="dischargeTime" value=""
+                            <input class="form-control" type="date" id="dischargeTime" name="dischargeTime" value=""
                             placeholder="出院时间">
                         </div>
                         <div class="form-group">
                             <label class="control-label" for="bedId">病床编号</label>
-                            <input class="form-control" type="text" id="bedId" name="bedId" value=""
-                            placeholder="病床编号">
+                            <select id="bedId" name="bedId" class="col-lg-12 form-control">
+                                <option value="">--全部--</option>
+                                <option th:each="bed : ${beds}" th:text="bedId" th:value="${bed.id}" th:title="${bed.id}"></option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label class="control-label" for="billId">预缴费单编号</label>
-                            <input class="form-control" type="text" id="billId" name="billId" value=""
-                            placeholder="预缴费单编号">
+                            <select id="billId" name="billId" class="col-lg-12 form-control">
+                                <option value="">--全部--</option>
+                                <option th:each="bill : ${bills}" th:text="${#dates.format(bill.date, 'yyyy-MM-dd HH-mm-ss')}" th:value="${bill.id}"></option>
+                            </select>
                         </div>
                     </div>
                     <div class="tile-footer">
@@ -97,28 +103,34 @@
             height: '238px' //设置容器宽度
             ,
             arrow: 'always' //始终显示箭头
-            //,anim: 'updown' //切换动画方式
         });
     });
 
-    $('#admin-adduser button').click(function () {
-        fd = new FormData(document.getElementById('admin-adduser'));
+    $('#add-file button').click(function () {
+
+        /*实例化表单数据*/
+        var fields = $('#add-file').serializeArray();
+
+        var obj = {}; // 声明一个对象
+        $.each(fields, function (index, field) {
+            obj[field.name] = field.value; // 通过变量 将属性值 属性一起放到对象中
+        })
+
         $.ajax({
-            url: '/admin/adduser',
+            url: '/file',
             type: "POST",
             timeout: "5000",
             dataType: "json",
-            contentType: 'application/x-www-form-urlencoded;charset=utf-8',
-            data: fd,
-            contentType: false,
+            contentType: 'application/json',
+            data: JSON.stringify(obj),
             processData: false,
             success: function (data) {
                 if (data.code == "200") {
-                    layer.msg(data.msg, {time: 1500}, function () {
-                        window.location.href = "/<?php echo ADMIN_PATH;?>/userinfo.html";
+                    layer.msg(data.message, {time: 1500}, function () {
+                        window.location.href = "/files";
                     });
                 } else {
-                    layer.msg(data.msg);
+                    layer.msg(data.message);
                 }
             },
             error: function (XMLResponse) {

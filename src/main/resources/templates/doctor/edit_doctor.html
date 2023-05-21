@@ -55,15 +55,17 @@
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label for="id">医生编号</label>
-                                            <input class="form-control" id="id" type="text" aria-describedby="id"
-                                                   name="id" th:value="${doctor.id}"
-                                                   placeholder="医生编号">
+                                            <input id="id" type="hidden" name="id" th:value="${doctor.id}">
+                                            <input class="form-control" type="text" th:value="${doctor.id}"
+                                                   disabled="disabled">
                                         </div>
                                         <div class="form-group">
                                             <label for="gender">医生性别</label>
-                                            <input class="form-control" id="gender" type="text" aria-describedby="gender"
-                                                   name="gender" th:value="${doctor.gender}"
-                                                   placeholder="医生性别">
+                                            <select id="gender" name="gender" class="col-lg-12 form-control">
+                                                <option value="">--全部--</option>
+                                                <option value="1">男</option>
+                                                <option value="2">女</option>
+                                            </select>
                                         </div>
                                         <div class="form-group">
                                             <label for="telephone">联系方式</label>
@@ -72,10 +74,14 @@
                                                    th:value="${doctor.telephone}" placeholder="联系方式">
                                         </div>
                                         <div class="form-group">
-                                            <label for="departmentId">所属部门</label>
-                                            <input class="form-control" id="departmentId" type="text" aria-describedby="departmentId"
-                                                   name="departmentId" th:value="${doctor.departmentId}"
-                                                   placeholder="所属部门">
+                                            <label for="departmentId">所属科室</label>
+                                            <select id="departmentId" name="departmentId"
+                                                    class="col-lg-12 form-control">
+                                                <option value="">--全部--</option>
+                                                <option th:each="department : ${departments}"
+                                                        th:text="${department.name}"
+                                                        th:value="${department.id}"></option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
@@ -89,7 +95,7 @@
                                             <label for="birthday">出生日期</label>
                                             <input class="form-control" id="birthday" type="date"
                                                    aria-describedby="address" name="birthday"
-                                                   th:value="${doctor.birthday}"
+                                                   th:value="${#dates.format(doctor.birthday, 'yyyy-MM-dd')}"
                                                    placeholder="出生日期">
                                         </div>
                                         <div class="form-group">
@@ -149,7 +155,7 @@
             success: function (data) {
                 if (data.code == "200") {
                     layer.msg(data.message, {time: 1500}, function () {
-                        location.reload();
+                        window.parent.location.reload();
                     });
                 } else {
                     layer.msg(data.message);

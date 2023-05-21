@@ -199,6 +199,30 @@ public class PrescriptionServiceImpl extends ServiceImpl<PrescriptionMapper, Pre
 
         return prescriptionVos;
     }
+
+    @Override
+    public Boolean payWithPrescription(Long id) {
+        Prescription prescription = this.getById(id);
+
+        // 1、根据 id 获取 bill 实体
+        Bill bill = billService.getById(prescription.getBillId());
+
+        // 2、判断是否获取成功
+        if (bill == null) {
+            throw new CustomException("缴费单号不存在！");
+        }
+
+        // 3、判断缴费单是否已缴费
+        if (bill.getStatus() == 1) {
+            throw new CustomException("已缴费，请勿重复缴费！");
+        }
+
+        // 4、修改缴费单状态
+        bill.setStatus(1);
+
+        // 5、更新数据库
+        return billService.updateById(bill);
+    }
 }
 
 

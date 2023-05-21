@@ -58,7 +58,7 @@
             </a>
         </li>
 
-        <li class="treeview">
+        <li class="treeview" hidden="hidden">
             <a class="app-menu__item" href="#" data-toggle="treeview">
                 <i class="app-menu__icon fa fa-users"></i>
                 <span class="app-menu__label">用户管理</span>
@@ -98,7 +98,7 @@
             </ul>
         </li>
 
-        <li class="treeview">
+        <li class="treeview" hidden="hidden">
             <a class="app-menu__item" href="#" data-toggle="treeview">
                 <i class="app-menu__icon fa fa-users"></i>
                 <span class="app-menu__label">病人管理</span>
@@ -157,6 +157,12 @@
                     <a class="treeview-item" th:href="@{/prescriptions}" target="frame">
                         <i class="icon fa fa-circle-o"></i>
                         处方缴费单
+                    </a>
+                </li>
+                <li>
+                    <a class="treeview-item" th:href="@{/hospitalizations}" target="frame">
+                        <i class="icon fa fa-circle-o"></i>
+                        住院缴费单
                     </a>
                 </li>
             </ul>
@@ -292,6 +298,13 @@
                     </a>
                 </li>
             </ul>
+        </li>
+
+        <li>
+            <a class="app-menu__item" th:href="@{/add_prescription}" target="frame">
+                <i class="app-menu__icon fa fa-edit"></i>
+                <span class="app-menu__label">开具处方</span>
+            </a>
         </li>
 
         <li>

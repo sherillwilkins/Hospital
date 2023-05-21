@@ -19,34 +19,39 @@
     <div class="app-title">
         <ul class="app-breadcrumb breadcrumb">
             <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-            <li class="breadcrumb-item"><a href="">添加病房</a></li>
+            <li class="breadcrumb-item"><a href="">添加用户</a></li>
         </ul>
     </div>
     <div class="row">
         <div class="col-md-12">
-            <form id="add-bed">
+            <form id="admin-adduser">
                 <div class="tile">
-                    <div class="form-group">
-                        <label class="control-label" for="wardId">病房位置</label>
-                        <select id="wardId" name="wardId" class="col-lg-12 form-control">
-                            <option value="">--全部--</option>
-                            <option th:each="ward : ${wards}" th:text="${ward.location}" th:value="${ward.id}"></option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="bedId">床位号</label>
-                        <input class="form-control" type="text" id="bedId" name="bedId" th:value="待完善"
-                               placeholder="床位号">
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="charge">床位费</label>
-                        <input class="form-control" type="text" id="charge" name="charge" value=""
-                               placeholder="床位费">
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="status">病床状态</label>
-                        <input class="form-control" type="text" id="status" name="status" th:value="待完善"
-                               placeholder="病床状态">
+                    <div class="tile-body">
+                        <div class="form-group">
+                            <label class="control-label" for="doctor_id">值班医生</label>
+                            <input class="form-control" type="text" id="doctor_id" name="doctor_id" value=""
+                             placeholder="值班医生">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="place">值班地点</label>
+                            <input class="form-control" type="text" id="place" name="place" value="" 
+                            placeholder="值班地点">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="start_time">值班开始时间</label>
+                            <input class="form-control" type="data" id="start_time" name="start_time" value="" 
+                            placeholder="值班开始时间">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="end_time">值班结束时间</label>
+                            <input class="form-control" type="data" id="end_time" name="end_time" value="" 
+                            placeholder="值班结束时间">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="type">值班类型</label>
+                            <input class="form-control" type="text" id="type" name="type" value="" 
+                            placeholder="值班类型">
+                        </div>
                     </div>
                     <div class="tile-footer">
                         <button class="btn btn-primary" type="button">
@@ -92,34 +97,28 @@
             height: '238px' //设置容器宽度
             ,
             arrow: 'always' //始终显示箭头
+            //,anim: 'updown' //切换动画方式
         });
     });
 
-    $('#add-bed button').click(function () {
-
-        /*实例化表单数据*/
-        var fields = $('#add-bed').serializeArray();
-
-        var obj = {}; // 声明一个对象
-        $.each(fields, function (index, field) {
-            obj[field.name] = field.value; // 通过变量 将属性值 属性一起放到对象中
-        })
-
+    $('#admin-adduser button').click(function () {
+        fd = new FormData(document.getElementById('admin-adduser'));
         $.ajax({
-            url: '/bed',
+            url: '/admin/adduser',
             type: "POST",
             timeout: "5000",
             dataType: "json",
-            contentType: 'application/json',
-            data: JSON.stringify(obj),
+            contentType: 'application/x-www-form-urlencoded;charset=utf-8',
+            data: fd,
+            contentType: false,
             processData: false,
             success: function (data) {
                 if (data.code == "200") {
-                    layer.msg(data.message, {time: 1500}, function () {
-                        window.location.href = "/beds";
+                    layer.msg(data.msg, {time: 1500}, function () {
+                        window.location.href = "/<?php echo ADMIN_PATH;?>/userinfo.html";
                     });
                 } else {
-                    layer.msg(data.message);
+                    layer.msg(data.msg);
                 }
             },
             error: function (XMLResponse) {

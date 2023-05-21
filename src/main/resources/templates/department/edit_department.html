@@ -30,43 +30,60 @@
 <main class="app-content">
     <div class="row">
         <div class="col-md-12">
-            <form id="edit-department">
-                <div class="tile">
-                    <div class="tile-body">
-                        <div class="form-group">
-                            <label class="control-label" for="id">科室编号</label>
-                            <input class="form-control" type="text" id="id" name="id" th:value="${department.id}"
-                                   placeholder="科室编号" disabled="disabled">
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="name">科室名称</label>
-                            <input class="form-control" type="text" id="name" name="name" th:value="${department.name}"
-                                   placeholder="科室名称">
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="description">科室介绍</label>
-                            <input class="form-control" type="text" id="description" name="description" th:value="${department.description}"
-                                   placeholder="科室介绍">
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="sectionId">所属部门</label>
-                            <input class="form-control" type="text" id="sectionId" name="sectionId" th:value="${department.sectionId}"
-                                   placeholder="所属部门">
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="telephone">联系方式</label>
-                            <input class="form-control" type="text" id="telephone" name="telephone" th:value="${department.telephone}"
-                                   placeholder="联系方式">
-                        </div>
-                    </div>
-                    <div class="tile-footer">
-                        <button class="btn btn-primary" name="submit" type="submit">
-                            <i class="fa fa-fw fa-lg fa-check-circle"></i>保存
-                        </button>
-                        <span style="color:#e60c0c"></span>
+            <div class="layui-tab layui-tab-card">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">科室信息</li>
+                </ul>
+                <div class="layui-tab-content" style="height: 100px;">
+                    <div class="layui-tab-item layui-show">
+                        <form id="edit-department">
+                            <div class="tile">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <label class="control-label" for="id">科室编号</label>
+                                            <input type="hidden" id="id" name="id" th:value="${department.id}">
+                                            <input class="form-control" type="text" th:value="${department.id}"
+                                                   disabled="disabled">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label" for="name">科室名称</label>
+                                            <input class="form-control" type="text" id="name" name="name"
+                                                   th:value="${department.name}"
+                                                   placeholder="科室名称">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label" for="description">科室介绍</label>
+                                            <input class="form-control" type="text" id="description" name="description"
+                                                   th:value="${department.description}"
+                                                   placeholder="科室介绍">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label" for="sectionId">所属部门</label>
+                                            <select id="sectionId" name="sectionId" class="col-lg-12 form-control">
+                                                <option value="">--全部--</option>
+                                                <option th:each="section : ${sections}" th:text="${section.name}"
+                                                        th:value="${section.id}"></option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label" for="telephone">联系方式</label>
+                                            <input class="form-control" type="text" id="telephone" name="telephone"
+                                                   th:value="${department.telephone}"
+                                                   placeholder="联系方式">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tile-footer">
+                                    <button type="button" class="btn btn-primary">
+                                        <i class="fa fa-fw fa-lg fa-check-circle"></i>保存
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </main>
@@ -87,10 +104,10 @@
 <script th:src="@{/plugins/layui/layui.all.js}"></script>
 
 <script>
-    $('#admin-useredit button').click(function () {
+    $('#edit-department button').click(function () {
 
         /*实例化表单数据*/
-        var fields = $('#admin-useredit').serializeArray();
+        var fields = $('#edit-department').serializeArray();
 
         var obj = {}; // 声明一个对象
         $.each(fields, function (index, field) {
@@ -108,7 +125,7 @@
             success: function (data) {
                 if (data.code == "200") {
                     layer.msg(data.message, {time: 1500}, function () {
-                        window.parent.location.reload(); // 刷新父页面
+                        window.parent.location.reload();
                     });
                 } else {
                     layer.msg(data.message);

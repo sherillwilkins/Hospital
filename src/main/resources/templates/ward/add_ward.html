@@ -24,7 +24,7 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <form id="admin-adduser">
+            <form id="add-ward">
                 <div class="tile">
                     <div class="tile-body">
                         <div class="form-group">
@@ -34,8 +34,10 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label" for="departmentId">所属科室</label>
-                            <input class="form-control" type="text" id="departmentId" name="departmentId" value=""
-                            placeholder="所属科室">
+                            <select id="departmentId" name="departmentId" class="col-lg-12 form-control">
+                                <option value="">--全部--</option>
+                                <option th:each="department : ${departments}" th:text="${department.name}" th:value="${department.id}"></option>
+                            </select>
                         </div>
                     </div>
                     <div class="tile-footer">
@@ -82,28 +84,34 @@
             height: '238px' //设置容器宽度
             ,
             arrow: 'always' //始终显示箭头
-            //,anim: 'updown' //切换动画方式
         });
     });
 
-    $('#admin-adduser button').click(function () {
-        fd = new FormData(document.getElementById('admin-adduser'));
+    $('#add-ward button').click(function () {
+
+        /*实例化表单数据*/
+        var fields = $('#add-ward').serializeArray();
+
+        var obj = {}; // 声明一个对象
+        $.each(fields, function (index, field) {
+            obj[field.name] = field.value; // 通过变量 将属性值 属性一起放到对象中
+        })
+
         $.ajax({
-            url: '/admin/adduser',
+            url: '/ward',
             type: "POST",
             timeout: "5000",
             dataType: "json",
-            contentType: 'application/x-www-form-urlencoded;charset=utf-8',
-            data: fd,
-            contentType: false,
+            contentType: 'application/json',
+            data: JSON.stringify(obj),
             processData: false,
             success: function (data) {
                 if (data.code == "200") {
-                    layer.msg(data.msg, {time: 1500}, function () {
-                        window.location.href = "/<?php echo ADMIN_PATH;?>/userinfo.html";
+                    layer.msg(data.message, {time: 1500}, function () {
+                        window.location.href = "/wards";
                     });
                 } else {
-                    layer.msg(data.msg);
+                    layer.msg(data.message);
                 }
             },
             error: function (XMLResponse) {

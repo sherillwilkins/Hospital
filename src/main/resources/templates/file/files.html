@@ -43,8 +43,8 @@
                         <tr th:each="file : ${files}">
                             <td th:text="${file.id}"></td>
                             <td th:text="${file.patientId}"></td>
-                            <td th:text="${file.admissionTime}"></td>
-                            <td th:text="${file.dischargeTime}"></td>
+                            <td th:text="${#dates.format(file.admissionTime, 'yyyy-MM-dd')}"></td>
+                            <td th:text="${#dates.format(file.dischargeTime, 'yyyy-MM-dd')}"></td>
                             <td th:text="${file.bedId}"></td>
                             <td th:text="${file.billId}"></td>
                             <td class="api-list-cz">
@@ -107,23 +107,18 @@
             title: "提示",
             btn: ['删除', '取消 '] //按钮
         }, function () {
-            fd = new FormData();
-            fd.append("id", _this.title);
             $.ajax({
-                url: '/admin/deluser',
-                type: "POST",
+                url: '/file/' + _this.title,
+                type: "DELETE",
                 timeout: "3000",
                 dataType: "json",
-                contentType: 'application/x-www-form-urlencoded;charset=utf-8',
-                data: fd,
-                contentType: false,
                 processData: false,
                 success: function (data) {
                     if (data.code == "200") {
-                        layer.msg(data.msg);
+                        layer.msg(data.message);
                         tbody.removeChild(tr);
                     } else {
-                        layer.msg(data.msg);
+                        layer.msg(data.message);
                     }
                 },
                 error: function (XMLResponse) {

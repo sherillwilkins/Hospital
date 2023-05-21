@@ -85,7 +85,7 @@
     function editRow(_this) {
         layer.open({
             type: 2,
-            title: '接口编辑',
+            title: '住院记录编辑',
             shadeClose: false,
             shade: true,
             maxmin: false, //开启最大化最小化按钮
@@ -95,7 +95,7 @@
         });
     }
 
-    //删除
+    // 删除
     function delRow(_this) {
         var td = _this.parentNode;
         var tr = td.parentNode;
@@ -108,20 +108,17 @@
             fd = new FormData();
             fd.append("id", _this.title);
             $.ajax({
-                url: '/admin/deluser',
-                type: "POST",
+                url: '/record/' + _this.title,
+                type: "DELETE",
                 timeout: "3000",
                 dataType: "json",
-                contentType: 'application/x-www-form-urlencoded;charset=utf-8',
-                data: fd,
-                contentType: false,
                 processData: false,
                 success: function (data) {
                     if (data.code == "200") {
-                        layer.msg(data.msg);
+                        layer.msg(data.message);
                         tbody.removeChild(tr);
                     } else {
-                        layer.msg(data.msg);
+                        layer.msg(data.message);
                     }
                 },
                 error: function (XMLResponse) {

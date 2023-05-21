@@ -62,7 +62,7 @@ public class PatientController {
             return Result.error("未知错误！挂号失败！");
         }
 
-        return Result.success(registeredOrder);
+        return Result.success("挂号成功！即将跳转缴费界面！", registeredOrder);
     }
 
     /**

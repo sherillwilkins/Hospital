@@ -20,7 +20,7 @@
     <div class="app-title">
         <ul class="app-breadcrumb breadcrumb side">
             <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-            <li class="breadcrumb-item">挂号单</li>
+            <li class="breadcrumb-item">挂号缴费单</li>
         </ul>
     </div>
     <div class="row">
@@ -46,11 +46,13 @@
                             <td th:text="${registration.patientName}"></td>
                             <td th:text="${registration.departmentName}"></td>
                             <td th:text="${registration.doctorName}"></td>
-                            <td th:text="${registration.date}"></td>
+                            <td th:text="${#dates.format(registration.date, 'yyyy-MM-dd HH:mm:ss')}"></td>
                             <td th:text="${registration.amount}"></td>
                             <td th:text="${registration.status}"></td>
                             <td class="api-list-cz">
-                                <a class="btn btn-primary btn-sm" onclick="delRow(this)"
+                                <a class="btn btn-primary btn-sm" onclick="hasPayed(this)" th:if="${registration.status} == 1"
+                                   th:title="${registration.id}">已支付</a>
+                                <a class="btn btn-primary btn-sm" onclick="pay(this)" th:if="${registration.status} == 0"
                                    th:title="${registration.id}">去支付</a>
                             </td>
                         </tr>
@@ -85,42 +87,33 @@
 
 <script type="text/javascript">
 
-    //删除
-    function delRow(_this) {
-        var td = _this.parentNode;
-        var tr = td.parentNode;
-        var tbody = tr.parentNode;
-        //询问框
-        layer.confirm('确定删除接口？', {
-            title: "提示",
-            btn: ['删除', '取消 '] //按钮
-        }, function () {
-            fd = new FormData();
-            fd.append("id", _this.title);
-            $.ajax({
-                url: '/admin/deluser',
-                type: "POST",
-                timeout: "3000",
-                dataType: "json",
-                contentType: 'application/x-www-form-urlencoded;charset=utf-8',
-                data: fd,
-                contentType: false,
-                processData: false,
-                success: function (data) {
-                    if (data.code == "200") {
-                        layer.msg(data.msg);
-                        tbody.removeChild(tr);
-                    } else {
-                        layer.msg(data.msg);
-                    }
-                },
-                error: function (XMLResponse) {
-                    layer.msg(XMLResponse.error);
-                }
-            });
-        });
+    function hasPayed(_this) {
+        layer.msg("已支付，请勿重复支付！");
     }
 
+    function pay(_this) {
+        $.ajax({
+            url: '/registration/payWithRegistration/' + _this.title,
+            type: "PUT",
+            timeout: "3000",
+            dataType: "json",
+            processData: false,
+            success: function (data) {
+                if (data.code == "200") {
+                    layer.msg(data.message, {
+                        time: 1000
+                    }, function () {
+                        location.reload();
+                    });
+                } else {
+                    layer.msg(data.message);
+                }
+            },
+            error: function (XMLResponse) {
+                layer.msg(XMLResponse.error);
+            }
+        })
+    }
 </script>
 
 </body>

@@ -45,7 +45,7 @@
                             <td th:text="${doctor.id}"></td>
                             <td th:text="${doctor.name}"></td>
                             <td th:text="${doctor.gender}"></td>
-                            <td th:text="${doctor.birthday}"></td>
+                            <td th:text="${#dates.format(doctor.birthday, 'yyyy-MM-dd')}"></td>
                             <td th:text="${doctor.telephone}"></td>
                             <td th:text="${doctor.title}"></td>
 <!--                            <td th:text="${doctor.fee}"></td>-->
